@@ -9,12 +9,13 @@ package part1;
  * Date: 2012-3-25 18:54:47
  */
 public class Question {
+	
 	public Question(String text){
-		text = this.text;
+		this.text = text;
 	}
 	public Question(String id, String text){
-		id = this.id;
-		text = this.text;
+		this.id = id;
+		this.text = text;
 	}
 	public String getText() {
 		return text;
@@ -28,7 +29,19 @@ public class Question {
 	public void setCategory(char category) {
 		this.category = category;
 	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	@Override
+	public String toString() {
+		return "Question [id=" + id + ", text=" + text + ", category="
+				+ category + "]";
+	}
 	private String id = "no-id";
+	
 	private String text;
 	private char category;  
 }
