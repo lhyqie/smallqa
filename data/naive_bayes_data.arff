@@ -1,0 +1,15 @@
+@RELATION NBData
+@ATTRIBUTE A {n,g,h,t,s,y}
+@ATTRIBUTE B {n,g,h,t,s,y}
+@ATTRIBUTE class {yes,no}
+@DATA
+n,t,yes
+n,s,yes
+g,s,yes
+h,s,yes
+n,y,yes
+g,y,no
+g,s,no
+g,t,no
+h,y,no
+n,t,no
