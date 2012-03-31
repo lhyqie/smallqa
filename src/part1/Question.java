@@ -4,7 +4,7 @@ package part1;
  * it contains the question id e.g. (2e)
  *             the question text body e.g. who directed Hugo?
  *             the category to which the question belongs
- *              A: world geography B: movies C: latest winter Olympics
+ *              G: world geography M: movies S: latest winter Olympics sports
  * Author: Huayi
  * Date: 2012-3-25 18:54:47
  */

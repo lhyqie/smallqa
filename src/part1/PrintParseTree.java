@@ -7,12 +7,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.objectbank.TokenizerFactory;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.CoreLabelTokenFactory;
@@ -26,7 +27,7 @@ import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 
 public class PrintParseTree {
-	LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
+	static LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
 	
 	/* 
 	 * Input: relative path of file storing the questions
@@ -114,5 +115,21 @@ public class PrintParseTree {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	/*
+	 *   input: text
+	 *   output: text with POS tags
+	 */
+	public static ArrayList<TaggedWord> getTaggedText(String text){
+		TokenizerFactory<CoreLabel> tokenizerFactory = PTBTokenizer.factory(new CoreLabelTokenFactory(), "");
+		List<CoreLabel> rawWords = tokenizerFactory.getTokenizer(new StringReader(text)).tokenize();
+		Tree parse = lp.apply(rawWords);
+		return parse.taggedYield();
+	}
+	
+	public static void main(String[] args) {
+		PrintParseTree app = new PrintParseTree();
+		LinkedList<Question> qList = app.readQuestionsFromFile("data/part1_questions.txt");
+		app.writeParseTreeToFile("output/parseTrees.txt", qList);
 	}
 }
