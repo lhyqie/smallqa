@@ -17,6 +17,11 @@ public class Question {
 		this.id = id;
 		this.text = text;
 	}
+	public Question(String id, String text, char cat){
+		this.id = id;
+		this.text = text;
+		this.category = cat;
+	}
 	public String getText() {
 		return text;
 	}

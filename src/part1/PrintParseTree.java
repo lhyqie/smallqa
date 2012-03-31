@@ -126,10 +126,4 @@ public class PrintParseTree {
 		Tree parse = lp.apply(rawWords);
 		return parse.taggedYield();
 	}
-	
-	public static void main(String[] args) {
-		PrintParseTree app = new PrintParseTree();
-		LinkedList<Question> qList = app.readQuestionsFromFile("data/part1_questions.txt");
-		app.writeParseTreeToFile("output/parseTrees.txt", qList);
-	}
 }
