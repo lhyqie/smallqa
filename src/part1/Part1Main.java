@@ -57,6 +57,7 @@ public class Part1Main extends JFrame {
 		});
 	}
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		//printParseTree();
 		try {
 	       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");            
@@ -64,6 +65,11 @@ public class Part1Main extends JFrame {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
+=======
+//		printParseTree();
+		testingPhrase();
+		
+>>>>>>> tf-idf + NB
 	}
 	public static void printParseTree(){
 		PrintParseTree app = new PrintParseTree();
@@ -71,35 +77,17 @@ public class Part1Main extends JFrame {
 		app.writeParseTreeToFile("output/parseTrees.txt", qList);
 	}
 	public static void trainingPhrase(){
-		LinkedList<Question> qList = loadTrainingData();
 		
 	}
 	public static void testingPhrase(){
-//		PrintParseTree parseTree = new PrintParseTree();
-//		CategoryClassifier classifier = new CategoryClassifier();
-//		LinkedList<Question> qList = parseTree.readQuestionsFromFile("data/questions.txt");
-//		for (Question question : qList) {
-//			System.out.print(question.getId() + " " +question.getText());
-//			System.out.println(classifier.classify(question.getText()));
-//		}
-	}
-	private static LinkedList<Question> loadTrainingData(){
-		LinkedList<Question> qList = new LinkedList<Question>();
-		Scanner scan = null;
-		try {
-			scan = new Scanner(new File("data/training_data.txt"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		PrintParseTree parseTree = new PrintParseTree();
+		CategoryClassifier classifier = new CategoryClassifier();
+		LinkedList<Question> qList = parseTree.readQuestionsFromFile("data/questions.txt");
+		for (Question question : qList) {
+			System.out.print(question.getId() + " " +question.getText());
+			System.out.println(classifier.classify(question.getText()));
 		}
-		while(scan.hasNextLine()){
-			String line = scan.nextLine();
-			if(line.startsWith("#") || line.length() == 0) continue;
-			if(scan.hasNextLine()){
-				String classLabel = scan.nextLine();
-				qList.add(new Question("no-id",line,classLabel.charAt(0)));
-			}
-		}
-		return qList;
+		System.out.println(classifier.features[0].length);
 	}
+	
 }

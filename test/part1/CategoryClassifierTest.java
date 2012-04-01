@@ -15,6 +15,8 @@ public class CategoryClassifierTest {
 		System.out.println(classifier.getSportsPN());
 		System.out.println(classifier.getGeographyPN().size());
 		System.out.println(classifier.getGeographyPN());
+		
+		
 	}
 	
 	@Test

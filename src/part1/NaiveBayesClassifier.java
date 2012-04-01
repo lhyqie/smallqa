@@ -21,7 +21,7 @@ public class NaiveBayesClassifier {
 		attributes.add(num1);
 		attributes.add(num2);
 		attributes.add(cls);
-		Instances dataset = new Instances("Test-dataset", attributes, 0);
+		Instances dataset = new Instances("Training-dataset", attributes, 0);
 		dataset.setClassIndex(dataset.numAttributes() - 1);
 		Instances testDataSet = new Instances(dataset);
 		
@@ -33,12 +33,17 @@ public class NaiveBayesClassifier {
 			Instance inst = new DenseInstance(1.0, values);
 			dataset.add(inst);
 		}
-		System.out.println(dataset);
+		values[0] = 0.7;
+		values[1] = 1.1;
+		values[2] = dataset.attribute(2).indexOfValue("no");
+		Instance inst = new DenseInstance(1.0, values);
+		dataset.add(inst);
+//		System.out.println(dataset);
 
 		values[0] = 0.7;
 		values[1] = 1.1;
-		values[2] = dataset.attribute(2).indexOfValue("yes");
-		Instance inst = new DenseInstance(1.0, values);
+//		values[2] = dataset.attribute(2).indexOfValue("yes");
+		inst = new DenseInstance(1.0, values);
 		testDataSet.add(inst);
 		
 		NaiveBayes nb = new NaiveBayes(); // new instance of tree
