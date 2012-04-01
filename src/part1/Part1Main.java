@@ -24,6 +24,7 @@ public class Part1Main extends JFrame {
 	JPanel panel = new JPanel(); 
 	private int width = 600;
 	private int height = 400;
+	CategoryClassifier classifier;
 	public Part1Main(){
 		this.setSize(width,height);
 		questionField.setBounds(30, 30, 400, 30);
@@ -40,6 +41,9 @@ public class Part1Main extends JFrame {
 		this.setResizable(false);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setTitle("Part1 of NLP project by Huayi & Weixiang");
+		//add classifier and use it.
+		classifier = new CategoryClassifier(1.0);
+		
 		commitBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -51,7 +55,8 @@ public class Part1Main extends JFrame {
 						    JOptionPane.WARNING_MESSAGE);
 					return ;
 				}
-				categoryField.setText("TBA");
+				
+				categoryField.setText(classifier.classify(text));
 				parseTreeField.setText(PrintParseTree.getParseTree(new Question(text)));
 			}
 		});
@@ -59,12 +64,13 @@ public class Part1Main extends JFrame {
 	public static void main(String[] args) {
 		//printParseTree();
 		try {
-	       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");            
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+//	       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");            
 	       Part1Main mainFrame = new Part1Main();
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-		testingPhrase();
+		testingPhrase(0.0);
 	}
 	public static void printParseTree(){
 		PrintParseTree app = new PrintParseTree();
@@ -74,15 +80,22 @@ public class Part1Main extends JFrame {
 	public static void trainingPhrase(){
 		
 	}
-	public static void testingPhrase(){
+	public static void testingPhrase(double train_percent){
 		PrintParseTree parseTree = new PrintParseTree();
-		CategoryClassifier classifier = new CategoryClassifier();
-		LinkedList<Question> qList = parseTree.readQuestionsFromFile("data/questions.txt");
-		for (Question question : qList) {
+		CategoryClassifier classifier = new CategoryClassifier(train_percent);
+//		LinkedList<Question> qList = parseTree.readQuestionsFromFile("data/training_data.txt");
+		LinkedList<Question> qList = classifier.loadTrainingData();
+		int correct_count = 0;
+		for (int i=0;i<classifier.test_list.length;i++) {
+			Question question = qList.get(classifier.test_list[i]);
+			System.out.println(question.getCategory()+"!");
 			System.out.print(question.getId() + " " +question.getText());
-			System.out.println(classifier.classify(question.getText()));
+			String res = classifier.classify(question.getText());
+			System.out.println(res);
+			if(res.equalsIgnoreCase(question.getCategory()+""))
+				correct_count++;
 		}
-		System.out.println(classifier.features[0].length);
+		System.out.println("the accuracy is "+ 1.0*correct_count/classifier.test_list.length);
 	}
 	
 }

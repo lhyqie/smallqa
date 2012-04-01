@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -35,7 +36,9 @@ public class CategoryClassifier {
     NaiveBayes nb = new NaiveBayes();
     double[][] features;
     double[] idf_features;
+    int[] test_list;
     Instances testDataSet;
+    double train_percent = 1.0;
     private TreeMap<String,Integer> idf_count = new TreeMap<String, Integer>();
 	private TreeMap<String,Double> idf = new TreeMap<String, Double>();
 	private TreeSet<String> voc = new TreeSet<String>();
@@ -44,12 +47,34 @@ public class CategoryClassifier {
 	private TreeSet<String> sportPN = new TreeSet<String>(); 
 	private TreeSet<String> geographyPN = new TreeSet<String>(); 
 	String classLabel[] = {"M","S","G"};
+	public CategoryClassifier(double train){
+		train_percent = train;
+		loadKeyWordSetsForMovie();
+		loadKeyWordSetsForSports();
+		loadKeyWordSetsForGeography();
+		build_feature();
+		build_classifier();
+	}
 	public CategoryClassifier(){
 		loadKeyWordSetsForMovie();
 		loadKeyWordSetsForSports();
 		loadKeyWordSetsForGeography();
 		build_feature();
 		build_classifier();
+	}
+	public int[] get_permutation(int[] list)
+	{
+		Random r =new Random();
+		int[] result = new int[list.length];
+		for(int i = 0; i < list.length;i++)
+		{
+			int t = r.nextInt(list.length-i);
+			int temp = list[t];
+			list[t] = list[list.length-1-i];
+			list[list.length-i-1] = temp;
+			result[list.length-i-1] = list[list.length-i-1];
+		}
+		return result;
 	}
 	public void build_classifier()
 	{
@@ -66,14 +91,23 @@ public class CategoryClassifier {
 			attributes.add(att);
 		}
 		attributes.add(cls);
-		
 		Instances dataset = new Instances("Training-dataset", attributes, 0);
 		
+		//get permutation
+		int[] temp_array = new int[features.length];
+		for(int i=0;i<temp_array.length;i++)
+			temp_array[i] = i;
+		test_list = new int[(int)Math.ceil(temp_array.length*(1-train_percent))];
+		int[] perm = get_permutation(temp_array);
+		for(int i=0;i<test_list.length;i++)
+		{
+			test_list[i] = perm[temp_array.length-test_list.length+i];
+		}
 		dataset.setClassIndex(dataset.numAttributes() - 1);
 		testDataSet = new Instances(dataset);
-		for(int i = 0; i<features.length;i++)
+		for(int i = 0; i<temp_array.length-test_list.length;i++)
 		{
-			Instance inst = new DenseInstance(1.0, features[i]);
+			Instance inst = new DenseInstance(1.0, features[perm[i]]);
 			dataset.add(inst);
 		}
 		System.out.println("DATASET:" + dataset);
@@ -195,30 +229,30 @@ public class CategoryClassifier {
 	private TreeSet<String> get_voc(LinkedList<Question> question_list)
 	{
 		TreeSet<String> result = new TreeSet<String>();
-//		Iterator<String> it = moviePN.iterator();
-//		while(it.hasNext())
-//		{
-//			String pn = it.next().toLowerCase();
-//			String[] words = pn.split(" ");
-//			for(String word:words)
-//				result.add(word);
-//		}
-//		it = sportPN.iterator();
-//		while(it.hasNext())
-//		{
-//			String pn = it.next().toLowerCase();
-//			String[] words = pn.split(" ");
-//			for(String word:words)
-//				result.add(word);
-//		}
-//		it = geographyPN.iterator();
-//		while(it.hasNext())
-//		{
-//			String pn = it.next().toLowerCase();
-//			String[] words = pn.split(" ");
-//			for(String word:words)
-//				result.add(word);
-//		}
+		Iterator<String> it = moviePN.iterator();
+		while(it.hasNext())
+		{
+			String pn = it.next().toLowerCase();
+			String[] words = pn.split(" ");
+			for(String word:words)
+				result.add(word);
+		}
+		it = sportPN.iterator();
+		while(it.hasNext())
+		{
+			String pn = it.next().toLowerCase();
+			String[] words = pn.split(" ");
+			for(String word:words)
+				result.add(word);
+		}
+		it = geographyPN.iterator();
+		while(it.hasNext())
+		{
+			String pn = it.next().toLowerCase();
+			String[] words = pn.split(" ");
+			for(String word:words)
+				result.add(word);
+		}
 		Iterator<Question> it_q = question_list.iterator();
 		while(it_q.hasNext())
 		{
@@ -234,99 +268,104 @@ public class CategoryClassifier {
 		return result;
 	}
 	public String classify(String text){
-//		ArrayList<TaggedWord> tagWords = PrintParseTree.getTaggedText(text);
-//		//System.out.println(tagWords);
-//		//System.out.println(tagWords.get(1).tag());
-//		int votes[] = new int[3]; 
-//		
-//		for (int i = 0; i < tagWords.size(); i++) {
+		ArrayList<TaggedWord> tagWords = PrintParseTree.getTaggedText(text);
+		//System.out.println(tagWords);
+		//System.out.println(tagWords.get(1).tag());
+		int votes[] = new int[3]; 
+		
+		for (int i = 0; i < tagWords.size(); i++) {
+			if(idf.containsKey(tagWords.get(i).word().toLowerCase())&&idf.get(tagWords.get(i).word().toLowerCase())>1.4){
 //			if(tagWords.get(i).tag().equals("NNP")){
-//				String word = tagWords.get(i).word().toLowerCase();
-//				for (String str : moviePN) {
-//					if( str.toLowerCase().indexOf(word) >= 0 ) {
-//						++ votes[0];
-//						break;
-//					}
-//				}
-//				for (String str : sportPN) {
-//					if( str.toLowerCase().indexOf(word) >= 0 ) {
-//						++ votes[1];
-//						break;
-//					}
-//				}
-//				for (String str : geographyPN) {
-//					if( str.toLowerCase().indexOf(word) >= 0 ) {
-//						++ votes[2];
-//						break;
-//					}
-//				}
-//				
-//			}
-//		}
-//		int maxVote = -1;
-//		int maxIndex = -1; 
-//		int maxCnt = 0;
-//		for (int i = 0; i < votes.length; i++) {
-//			if(maxVote < votes[i]){
-//				maxIndex = i;
-//				maxVote = votes[i];
-//			}
-//		}
-//		for (int i = 0; i < votes.length; i++) {
-//			if(maxVote == votes[i]) ++maxCnt;
-//		}
-//		//System.out.print(Arrays.toString(votes));
-//		if(maxCnt == 1){
-//			return classLabel[maxIndex];
-//		}
+				String word = tagWords.get(i).word().toLowerCase();
+				for (String str : moviePN) {
+					if( str.toLowerCase().indexOf(word) >= 0 ) {
+						System.out.println(word);
+						++ votes[0];
+						break;
+					}
+				}
+				for (String str : sportPN) {
+					if( str.toLowerCase().indexOf(word) >= 0 ) {
+						System.out.println(word);
+						++ votes[1];
+						break;
+					}
+				}
+				for (String str : geographyPN) {
+					if( str.toLowerCase().indexOf(word) >= 0 ) {
+						System.out.println(word);
+						++ votes[2];
+						break;
+					}
+				}
+				
+			}//if
+		}
+		int maxVote = -1;
+		int maxIndex = -1; 
+		int maxCnt = 0;
+		for (int i = 0; i < votes.length; i++) {
+			if(maxVote < votes[i]){
+				maxIndex = i;
+				maxVote = votes[i];
+			}
+		}
+		for (int i = 0; i < votes.length; i++) {
+			if(maxVote == votes[i]) ++maxCnt;
+		}
+		System.out.print(Arrays.toString(votes));
+		if(maxCnt == 1){
+			return classLabel[maxIndex];
+		}
+		else
 //		// phrase 2 by weixiang
 		{
 			//get the features;
-			double[] feature = new double[features[0].length];
-			double[] IDF = new double[features[0].length];
-			Iterator<String> it = voc.iterator();
-			int index = 0;
-			while(it.hasNext())
-			{
-				IDF[index] = idf.get(it.next());
-				index++;
-			}
-				
-			String[] terms = text.toLowerCase().split("[ ?,.;:!()]");
-			for(String t:terms)
-			{
-				t = t.trim();
-				if(t.length()>0 && voc.contains(t))
-				{
-					int ind = term_index.get(t);
-					int frequency = 0;
-					//get the term frequency
-					for(int j=0;j<terms.length;j++)
-					{
-						if(terms[j].equals(t))
-							frequency++;
-					}
-					feature[ind] = frequency * IDF[ind];
-				}
-			}
-			System.out.println("feature="+Arrays.toString(feature));
-			try
-			{
-				testDataSet.clear();
-				testDataSet.add(new DenseInstance(1.0, feature));
-				double dist[] = nb.distributionForInstance(testDataSet.get(0));
-				for (double d : dist) {
-					System.out.print(d+"\t");
-				}
-				System.out.println();
-				double result = nb.classifyInstance(testDataSet.firstInstance());
-				return classLabel[(int)result];
-			}
-			catch (Exception e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			double[] feature = new double[features[0].length];
+//			double[] IDF = new double[features[0].length];
+//			Iterator<String> it = voc.iterator();
+//			int index = 0;
+//			while(it.hasNext())
+//			{
+//				IDF[index] = idf.get(it.next());
+//				index++;
+//			}
+//				
+//			String[] terms = text.toLowerCase().split("[ ?,.;:!()]");
+//			for(String t:terms)
+//			{
+//				t = t.trim();
+//				if(t.length()>0 && voc.contains(t))
+//				{
+//					int ind = term_index.get(t);
+//					int frequency = 0;
+//					//get the term frequency
+//					for(int j=0;j<terms.length;j++)
+//					{
+//						if(terms[j].equals(t))
+//							frequency++;
+//					}
+//					feature[ind] = frequency * IDF[ind];
+//				}
+//			}
+//			System.out.println("feature="+Arrays.toString(feature));
+//			try
+//			{
+//				testDataSet.clear();
+//				testDataSet.add(new DenseInstance(1.0, feature));
+//				double dist[] = nb.distributionForInstance(testDataSet.get(0));
+//				for (double d : dist) {
+//					System.out.print(d+"\t");
+//				}
+//				System.out.println();
+//				double result = nb.classifyInstance(testDataSet.firstInstance());
+//				return classLabel[(int)result];
+//			}
+//			catch (Exception e)
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			return "";
 		}
 	}
