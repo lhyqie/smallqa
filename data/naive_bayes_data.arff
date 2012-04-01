@@ -1,15 +1,19 @@
 @RELATION NBData
-@ATTRIBUTE A {n,g,h,t,s,y}
-@ATTRIBUTE B {n,g,h,t,s,y}
-@ATTRIBUTE class {yes,no}
+@attribute g numeric
+@attribute h numeric
+@attribute n numeric
+@attribute s numeric
+@attribute t numeric
+@attribute y numeric
+@attribute class {M,S,G}
 @DATA
-n,t,yes
-n,s,yes
-g,s,yes
-h,s,yes
-n,y,yes
-g,y,no
-g,s,no
-g,t,no
-h,y,no
-n,t,no
+0,0,1,0,1,0,M
+0,0,1,1,0,0,M
+1,0,0,1,0,0,M
+0,1,0,1,0,0,M
+0,0,1,0,0,1,M
+1,0,0,0,0,1,S
+1,0,0,1,0,0,S
+1,0,0,0,1,0,S
+0,1,0,0,0,1,S
+0,0,1,0,1,0,S

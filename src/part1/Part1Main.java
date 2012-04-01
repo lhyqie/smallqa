@@ -64,7 +64,6 @@ public class Part1Main extends JFrame {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-//		printParseTree();
 		testingPhrase();
 	}
 	public static void printParseTree(){
