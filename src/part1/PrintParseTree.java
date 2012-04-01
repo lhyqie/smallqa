@@ -65,7 +65,7 @@ public class PrintParseTree {
 	 * Output: a parse tree
 	 * Author: Huayi
 	 */ 
-	public String getParseTree(Question question){
+	public static String getParseTree(Question question){
 		String text = question.getText();
 	    TokenizerFactory<CoreLabel> tokenizerFactory = 
 	      PTBTokenizer.factory(new CoreLabelTokenFactory(), "");
