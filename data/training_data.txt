@@ -1,110 +1,110 @@
-# category A: world geography B: movies C: latest winter Olympics
+# category G: world geography M: movies S: latest winter Olympics
 #  the following data is organized as a sentence succeed by its class label which is suceced by a empty line
 #  
 Is Rome the capital of Italy?
-A
+G
 
 Is France in Europe?
-A
+G
 
 Is the Pacific deeper than than the Atlantic?
-A
+G
 
 Did Razzoli win the wen slalom in 2010?
-C
+S
 
 Did Sweden beat Finland in hockey?
-C
+S
 
 Did a woman from Korea win the gold medal in figure skating?
-C
+S
 
 Did Neeson star in Schindler's List?
-B
+M
 
 Did Swank win the oscar in 2000?
-B
+M
 
 Is the Shining by Kubrik?
-B
+M
 
 Did a French actor win the oscar in 2012?
-B
+M
 
 Who directed Hugo?
-B
+M
 
 Which is the scary movie by Kubrik with Nicholson?
-B
+M
 
 Who won the oscar for the best actor in 2005?
-B
+M
 
 Which actress won the oscar in 2012?
-B
+M
 
 Who directed the best movie in 2010?
-B
+M
 
 In which continent does Canada lie?
-A
+G
 
 What is the capital of Bahrain?
-A
+G
 
 With which countries does Italy have a border?
-A
+G
 
 Which is the highest mountain in the world?
-A
+G
 
 Who won women figure skating in Vancouver?
-C
+S
 
 Which country won gold in women hockey?
-C
+S
 
 Which event did Lysacek win?
-C
+S
 
 Which woman won two silver medals in alpine skiing?
-C
+S
 
 In which race did Ohno win silver?
-C
+S
 
 In which sport did Canada win two gold medals?
-C
+S
 
 Did Dickens write Romeo and Juliet?
-B
+M
 
 Was Reagan a US president?
-A
+G
 
 Was Reagan born after 1945?
-A
+G
 
 Was Dickens born in England?
-A
+G
 
 Which English author wrote David Copperfield?
-B
+M
 
 Which US president served two terms after the second world war?
-A
+G
 
 Which US president served two terms after 1945?
-A
+G
 
 When did the civil war start?
-A
+G
 
 What is the capital of Bahrain?
-A
+G
 
 With which countries does Italy have a border?
-A
+G
 
 Which is the highest mountain in the world?
-A
+G
