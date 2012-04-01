@@ -108,7 +108,3 @@ G
 
 Which is the highest mountain in the world?
 G
-<<<<<<< HEAD
-=======
-
->>>>>>> tf-idf + NB

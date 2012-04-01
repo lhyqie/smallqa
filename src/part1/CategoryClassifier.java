@@ -89,6 +89,7 @@ public class CategoryClassifier {
 	private void build_feature()
 	{
 		LinkedList<Question> question_list = loadTrainingData();
+		System.out.println(question_list);
 		voc = get_voc(question_list);
 		features = new double[question_list.size()][voc.size()+1];
 		idf_features = new double[voc.size()];

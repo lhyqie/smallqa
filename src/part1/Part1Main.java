@@ -57,7 +57,6 @@ public class Part1Main extends JFrame {
 		});
 	}
 	public static void main(String[] args) {
-<<<<<<< HEAD
 		//printParseTree();
 		try {
 	       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");            
@@ -65,11 +64,8 @@ public class Part1Main extends JFrame {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-=======
 //		printParseTree();
 		testingPhrase();
-		
->>>>>>> tf-idf + NB
 	}
 	public static void printParseTree(){
 		PrintParseTree app = new PrintParseTree();
