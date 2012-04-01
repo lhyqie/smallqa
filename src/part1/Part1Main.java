@@ -59,7 +59,8 @@ public class Part1Main extends JFrame {
 	public static void main(String[] args) {
 		//printParseTree();
 		try {
-	       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");            
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+	       //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");            
 	       Part1Main mainFrame = new Part1Main();
 	    } catch (Exception e) {
 	    	e.printStackTrace();
