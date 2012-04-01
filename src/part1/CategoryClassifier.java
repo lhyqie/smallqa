@@ -54,9 +54,9 @@ public class CategoryClassifier {
 	public void build_classifier()
 	{
 		ArrayList<String> labels = new ArrayList<String>();
-		labels.add("M");
-		labels.add("S");
-		labels.add("G");
+		for (String label : classLabel) {
+			labels.add(label);
+		}
 		Attribute cls = new Attribute("class", labels);
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		Iterator<String> it = voc.iterator();
@@ -76,6 +76,7 @@ public class CategoryClassifier {
 			Instance inst = new DenseInstance(1.0, features[i]);
 			dataset.add(inst);
 		}
+		System.out.println("DATASET:" + dataset);
 		try
 		{
 			nb.buildClassifier(dataset);
@@ -124,7 +125,7 @@ public class CategoryClassifier {
 						if(words[j].equals(w))
 							frequency++;
 					}
-					features[i][ind] = frequency*idf_features[ind];
+					features[i][ind] = frequency * idf_features[ind];
 				}
 			}
 			int ind = 0;
@@ -193,30 +194,30 @@ public class CategoryClassifier {
 	private TreeSet<String> get_voc(LinkedList<Question> question_list)
 	{
 		TreeSet<String> result = new TreeSet<String>();
-		Iterator<String> it = moviePN.iterator();
-		while(it.hasNext())
-		{
-			String pn = it.next().toLowerCase();
-			String[] words = pn.split(" ");
-			for(String word:words)
-				result.add(word);
-		}
-		it = sportPN.iterator();
-		while(it.hasNext())
-		{
-			String pn = it.next().toLowerCase();
-			String[] words = pn.split(" ");
-			for(String word:words)
-				result.add(word);
-		}
-		it = geographyPN.iterator();
-		while(it.hasNext())
-		{
-			String pn = it.next().toLowerCase();
-			String[] words = pn.split(" ");
-			for(String word:words)
-				result.add(word);
-		}
+//		Iterator<String> it = moviePN.iterator();
+//		while(it.hasNext())
+//		{
+//			String pn = it.next().toLowerCase();
+//			String[] words = pn.split(" ");
+//			for(String word:words)
+//				result.add(word);
+//		}
+//		it = sportPN.iterator();
+//		while(it.hasNext())
+//		{
+//			String pn = it.next().toLowerCase();
+//			String[] words = pn.split(" ");
+//			for(String word:words)
+//				result.add(word);
+//		}
+//		it = geographyPN.iterator();
+//		while(it.hasNext())
+//		{
+//			String pn = it.next().toLowerCase();
+//			String[] words = pn.split(" ");
+//			for(String word:words)
+//				result.add(word);
+//		}
 		Iterator<Question> it_q = question_list.iterator();
 		while(it_q.hasNext())
 		{
@@ -232,62 +233,64 @@ public class CategoryClassifier {
 		return result;
 	}
 	public String classify(String text){
-		ArrayList<TaggedWord> tagWords = PrintParseTree.getTaggedText(text);
-		System.out.println(tagWords);
-		//System.out.println(tagWords.get(1).tag());
-		int votes[] = new int[3]; 
-		
-		for (int i = 0; i < tagWords.size(); i++) {
-			if(tagWords.get(i).tag().equals("NNP")){
-				String word = tagWords.get(i).word().toLowerCase();
-				for (String str : moviePN) {
-					if( str.toLowerCase().indexOf(word) >= 0 ) {
-						++ votes[0];
-						break;
-					}
-				}
-				for (String str : sportPN) {
-					if( str.toLowerCase().indexOf(word) >= 0 ) {
-						++ votes[1];
-						break;
-					}
-				}
-				for (String str : geographyPN) {
-					if( str.toLowerCase().indexOf(word) >= 0 ) {
-						++ votes[2];
-						break;
-					}
-				}
-				
-			}
-		}
-		int maxVote = -1;
-		int maxIndex = -1; 
-		int maxCnt = 0;
-		for (int i = 0; i < votes.length; i++) {
-			if(maxVote < votes[i]){
-				maxIndex = i;
-				maxVote = votes[i];
-			}
-		}
-		for (int i = 0; i < votes.length; i++) {
-			if(maxVote == votes[i]) ++maxCnt;
-		}
-		System.out.print(Arrays.toString(votes));
-		if(maxCnt == 1){
-			return classLabel[maxIndex];
-		}
-		else 
+//		ArrayList<TaggedWord> tagWords = PrintParseTree.getTaggedText(text);
+//		//System.out.println(tagWords);
+//		//System.out.println(tagWords.get(1).tag());
+//		int votes[] = new int[3]; 
+//		
+//		for (int i = 0; i < tagWords.size(); i++) {
+//			if(tagWords.get(i).tag().equals("NNP")){
+//				String word = tagWords.get(i).word().toLowerCase();
+//				for (String str : moviePN) {
+//					if( str.toLowerCase().indexOf(word) >= 0 ) {
+//						++ votes[0];
+//						break;
+//					}
+//				}
+//				for (String str : sportPN) {
+//					if( str.toLowerCase().indexOf(word) >= 0 ) {
+//						++ votes[1];
+//						break;
+//					}
+//				}
+//				for (String str : geographyPN) {
+//					if( str.toLowerCase().indexOf(word) >= 0 ) {
+//						++ votes[2];
+//						break;
+//					}
+//				}
+//				
+//			}
+//		}
+//		int maxVote = -1;
+//		int maxIndex = -1; 
+//		int maxCnt = 0;
+//		for (int i = 0; i < votes.length; i++) {
+//			if(maxVote < votes[i]){
+//				maxIndex = i;
+//				maxVote = votes[i];
+//			}
+//		}
+//		for (int i = 0; i < votes.length; i++) {
+//			if(maxVote == votes[i]) ++maxCnt;
+//		}
+//		//System.out.print(Arrays.toString(votes));
+//		if(maxCnt == 1){
+//			return classLabel[maxIndex];
+//		}
+//		// phrase 2 by weixiang
 		{
 			//get the features;
 			double[] feature = new double[features[0].length];
+			double[] IDF = new double[features[0].length];
 			Iterator<String> it = voc.iterator();
 			int index = 0;
 			while(it.hasNext())
 			{
-				feature[index] = idf.get(it.next());
+				IDF[index] = idf.get(it.next());
 				index++;
 			}
+				
 			String[] terms = text.toLowerCase().split("[ ?,.;:!()]");
 			for(String t:terms)
 			{
@@ -302,9 +305,10 @@ public class CategoryClassifier {
 						if(terms[j].equals(t))
 							frequency++;
 					}
-					feature[ind] = idf_features[ind]*frequency;
+					feature[ind] = frequency * IDF[ind];
 				}
 			}
+			System.out.println("feature="+Arrays.toString(feature));
 			try
 			{
 				testDataSet.clear();
@@ -449,7 +453,7 @@ public class CategoryClassifier {
 		closeDB();
 	}
 
-	private  LinkedList<Question> loadTrainingData(){
+	public  LinkedList<Question> loadTrainingData(){
 		LinkedList<Question> qList = new LinkedList<Question>();
 		Scanner scan = null;
 		try {

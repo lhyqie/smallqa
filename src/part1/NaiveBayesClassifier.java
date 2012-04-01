@@ -1,6 +1,7 @@
 package part1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
@@ -62,28 +63,30 @@ public class NaiveBayesClassifier {
 	}
 	public static void buildDataFromArffFile(){
 		try {
-			String classLabels [] = {"yes","no"};
+			//String classLabels [] = {"yes","no"};
+			String classLabels [] = {"M","S","G"};
 			Instances trainData = DataSource.read("data/naive_bayes_data.arff");
 			trainData.setClassIndex(trainData.numAttributes() - 1);
 			Instances testData = new Instances(trainData);
 			System.out.println(trainData);
-			
+			//System.out.println(testData);
 			NaiveBayes nb = new NaiveBayes(); // new instance of tree
 			nb.buildClassifier(trainData);
 			
-			
-			double values[] = new double[trainData.numAttributes()];
-			values[0] = trainData.attribute(0).indexOfValue("n");
-			values[1] = trainData.attribute(0).indexOfValue("t");
-			Instance inst = new DenseInstance(1.0, values);
-			
-			testData.add(inst);
-			
-			double dist[] = nb.distributionForInstance(testData.firstInstance());
-			for (double d : dist) {
-				System.out.println(d);
+//			double values[] = new double[trainData.numAttributes()];
+//			values[0] = trainData.attribute(0).indexOfValue("n");
+//			values[1] = trainData.attribute(0).indexOfValue("t");
+//			Instance inst = new DenseInstance(1.0, values);
+//			
+//			testData.add(inst);
+			for (int i =0 ; i<testData.size(); i++) {
+				System.out.println(classLabels[(int)testData.get(i).classValue()]+"!");
+				double dist[] = nb.distributionForInstance(testData.get(i));
+				System.out.println(Arrays.toString(dist));
+				System.out.println(classLabels[(int)nb.classifyInstance(testData.get(i))]);
+				System.out.println();
 			}
-			System.out.println(classLabels[(int)nb.classifyInstance(testData.firstInstance())]);
+			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -91,7 +94,7 @@ public class NaiveBayesClassifier {
 		}
 	}
 	public static void main(String[] args) {
-		buildDataOnTheFly();
-		//buildDataFromArffFile();
+		//buildDataOnTheFly();
+		buildDataFromArffFile();
 	}
 }
