@@ -1,0 +1,25 @@
+sport
+sports
+competition
+race
+athletes
+athlete
+races
+raced
+metal
+olympic
+medal
+gold medal
+silver medal
+golden medal
+bronze medal
+first place
+second place
+third place
+skating
+skiing
+luge
+biathlon
+hockey
+curling
+bobsleigh

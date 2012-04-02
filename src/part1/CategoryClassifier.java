@@ -40,15 +40,24 @@ public class CategoryClassifier {
     Instances testDataSet;
     double train_percent = 1.0;
     private TreeMap<String,Integer> idf_count = new TreeMap<String, Integer>();
-	private TreeMap<String,Double> idf = new TreeMap<String, Double>();
+	public TreeMap<String,Double> idf = new TreeMap<String, Double>();
 	private TreeSet<String> voc = new TreeSet<String>();
 	private HashMap<String, Integer> term_index = new HashMap<String, Integer>();
-    private TreeSet<String> moviePN = new TreeSet<String>(); 
+   
+	private TreeSet<String> keywords_M = new TreeSet<String>();
+	private TreeSet<String> keywords_S = new TreeSet<String>();
+	private TreeSet<String> keywords_G = new TreeSet<String>();
+	private TreeSet<String> movie_personName = new TreeSet<String>();
+	private TreeSet<String> movie_movieName = new TreeSet<String>();
+	private TreeSet<String> sports_personName = new TreeSet<String>();
+	private TreeSet<String> moviePN = new TreeSet<String>(); 
 	private TreeSet<String> sportPN = new TreeSet<String>(); 
 	private TreeSet<String> geographyPN = new TreeSet<String>(); 
+	
 	String classLabel[] = {"M","S","G"};
 	public CategoryClassifier(double train){
 		train_percent = train;
+		loadKeyWord();
 		loadKeyWordSetsForMovie();
 		loadKeyWordSetsForSports();
 		loadKeyWordSetsForGeography();
@@ -56,6 +65,7 @@ public class CategoryClassifier {
 		build_classifier();
 	}
 	public CategoryClassifier(){
+		loadKeyWord();
 		loadKeyWordSetsForMovie();
 		loadKeyWordSetsForSports();
 		loadKeyWordSetsForGeography();
@@ -110,7 +120,7 @@ public class CategoryClassifier {
 			Instance inst = new DenseInstance(1.0, features[perm[i]]);
 			dataset.add(inst);
 		}
-		System.out.println("DATASET:" + dataset);
+		//System.out.println("DATASET:" + dataset);
 		try
 		{
 			nb.buildClassifier(dataset);
@@ -268,40 +278,98 @@ public class CategoryClassifier {
 		return result;
 	}
 	public String classify(String text){
+		text = text.toLowerCase();
 		ArrayList<TaggedWord> tagWords = PrintParseTree.getTaggedText(text);
 		//System.out.println(tagWords);
 		//System.out.println(tagWords.get(1).tag());
-		int votes[] = new int[3]; 
+		/*
+		 *  step 0  simplest rule - keywords
+		 */
+		String tokens[] = text.split("[ ?,.;:!()]");
+		for (int i = 0; i < tokens.length; i++) {
+			if(keywords_M.contains(tokens[i])) {
+				System.out.print("¡¾Rule 0: keywords inference¡¿");
+				return "M";
+			}
+			if(keywords_S.contains(tokens[i])) {
+				System.out.print("¡¾Rule 0: keywords inference¡¿");
+				return "S";
+			}
+			if(keywords_G.contains(tokens[i])) {
+				System.out.print("¡¾Rule 0: keywords inference¡¿");
+				return "G";
+			}
+		}
+		/*
+		 * step 1 Movie or not
+		 */
+		// 1.1 if the question has any substring as a movie name, return "M" (movie) directly
 		
+		for (String str : movie_movieName) {
+			int index = text.toLowerCase().indexOf(str);
+			boolean tag_front = false;
+			boolean tag_after = false;
+			if(index < 0) continue;
+			if(index==0 || !Character.isAlphabetic(text.charAt(index-1)))
+				tag_front = true;
+			if(index + str.length()==text.length() || !Character.isAlphabetic(text.charAt(index + str.length()))){
+				tag_after = true;
+			}
+			if(tag_front && tag_after){
+					System.out.print("¡¾Rule 1.1¡¿:" + str);
+					return "M";
+			}
+		}
+		
+		// 1.2 if the question has any personName in movie but not in sports, return "M" directly
+		for (String str : movie_personName) {
+			if(!sports_personName.contains(str) && !sportPN.contains(str) 
+					&& !geographyPN.contains(str)) {
+				 String pieces[] = text.split("[ ?,.;:!()]");
+				 
+				 for (String token : pieces) {
+					 if(token.equals(str)){
+						 System.out.print("¡¾Rule 1.2¡¿:" + str);
+						 return "M"; 
+					 }
+				 }
+			}
+		}
+		
+		/*
+		 *  step 2 voting
+		 */
+		/*
+		double votes[] = new double[3]; 
 		for (int i = 0; i < tagWords.size(); i++) {
-			if(idf.containsKey(tagWords.get(i).word().toLowerCase())&&idf.get(tagWords.get(i).word().toLowerCase())>1.4){
+//			if(idf.containsKey(tagWords.get(i).word().toLowerCase())&&idf.get(tagWords.get(i).word().toLowerCase())>1.4){
 //			if(tagWords.get(i).tag().equals("NNP")){
 				String word = tagWords.get(i).word().toLowerCase();
 				for (String str : moviePN) {
 					if( str.toLowerCase().indexOf(word) >= 0 ) {
-						System.out.println(word);
-						++ votes[0];
+						Double wordIDF = idf.get(tagWords.get(i).word().toLowerCase());
+						if(wordIDF!= null) votes[0]+= wordIDF ;
 						break;
 					}
 				}
 				for (String str : sportPN) {
 					if( str.toLowerCase().indexOf(word) >= 0 ) {
-						System.out.println(word);
-						++ votes[1];
+						Double wordIDF = idf.get(tagWords.get(i).word().toLowerCase());
+						if(wordIDF!= null) votes[1]+= wordIDF ;
 						break;
 					}
 				}
 				for (String str : geographyPN) {
 					if( str.toLowerCase().indexOf(word) >= 0 ) {
-						System.out.println(word);
-						++ votes[2];
+						Double wordIDF = idf.get(tagWords.get(i).word().toLowerCase());
+						if(wordIDF!= null) votes[2]+= wordIDF ;
 						break;
 					}
 				}
 				
-			}//if
+//			}//if
 		}
-		int maxVote = -1;
+		double maxVote = -1;
 		int maxIndex = -1; 
 		int maxCnt = 0;
 		for (int i = 0; i < votes.length; i++) {
@@ -310,64 +378,71 @@ public class CategoryClassifier {
 				maxVote = votes[i];
 			}
 		}
-		for (int i = 0; i < votes.length; i++) {
-			if(maxVote == votes[i]) ++maxCnt;
-		}
+//		for (int i = 0; i < votes.length; i++) {
+//			if(maxVote == votes[i]) ++maxCnt;
+//		}
 		System.out.print(Arrays.toString(votes));
-		if(maxCnt == 1){
+		if(maxVote / (votes[0] + votes[1] + votes[2]) > 0.5){
+//		if(maxCnt == 1){
+			System.out.print("¡¾ 2 By voting¡¿");
 			return classLabel[maxIndex];
 		}
-		else
-//		// phrase 2 by weixiang
-		{
+		*/
+		/*
+		 *  naive bayes 
+		 */
+		
+			
 			//get the features;
-//			double[] feature = new double[features[0].length];
-//			double[] IDF = new double[features[0].length];
-//			Iterator<String> it = voc.iterator();
-//			int index = 0;
-//			while(it.hasNext())
-//			{
-//				IDF[index] = idf.get(it.next());
-//				index++;
-//			}
-//				
-//			String[] terms = text.toLowerCase().split("[ ?,.;:!()]");
-//			for(String t:terms)
-//			{
-//				t = t.trim();
-//				if(t.length()>0 && voc.contains(t))
-//				{
-//					int ind = term_index.get(t);
-//					int frequency = 0;
-//					//get the term frequency
-//					for(int j=0;j<terms.length;j++)
-//					{
-//						if(terms[j].equals(t))
-//							frequency++;
-//					}
-//					feature[ind] = frequency * IDF[ind];
-//				}
-//			}
-//			System.out.println("feature="+Arrays.toString(feature));
-//			try
-//			{
-//				testDataSet.clear();
-//				testDataSet.add(new DenseInstance(1.0, feature));
-//				double dist[] = nb.distributionForInstance(testDataSet.get(0));
-//				for (double d : dist) {
-//					System.out.print(d+"\t");
-//				}
-//				System.out.println();
-//				double result = nb.classifyInstance(testDataSet.firstInstance());
-//				return classLabel[(int)result];
-//			}
-//			catch (Exception e)
-//			{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			double[] feature = new double[features[0].length];
+			double[] IDF = new double[features[0].length];
+			Iterator<String> it = voc.iterator();
+			int index = 0;
+			while(it.hasNext())
+			{
+				IDF[index] = idf.get(it.next());
+				index++;
+			}
+				
+			String[] terms = text.toLowerCase().split("[ ?,.;:!()]");
+			for(String t:terms)
+			{
+				t = t.trim();
+				if(t.length()>0 && voc.contains(t))
+				{
+					int ind = term_index.get(t);
+					int frequency = 0;
+					//get the term frequency
+					for(int j=0;j<terms.length;j++)
+					{
+						if(terms[j].equals(t))
+							frequency++;
+					}
+					feature[ind] = frequency * IDF[ind];
+				}
+			}
+			System.out.println("feature="+Arrays.toString(feature));
+			try
+			{
+				testDataSet.clear();
+				testDataSet.add(new DenseInstance(1.0, feature));
+				double dist[] = nb.distributionForInstance(testDataSet.get(0));
+				for (double d : dist) {
+					System.out.print(d+"\t");
+				}
+				System.out.println();
+				double result = nb.classifyInstance(testDataSet.firstInstance());
+				System.out.print("¡¾3 NB ¡¿");
+				return classLabel[(int)result];
+			}
+			catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.print("¡¾4 none ¡¿");
 			return "";
-		}
+		
 	}
 	private void connectToDB(String dbName){
 		try {  
@@ -387,14 +462,44 @@ public class CategoryClassifier {
 			e.printStackTrace();
 		}  
 	}
-	/* add MovieDB.Person.name and MovieDB.Movie.name
+	private void loadKeyWord(){
+		try{
+			Scanner scan = new Scanner(new File("data/keywords_M.txt"));
+			while(scan.hasNextLine()){
+				keywords_M.add(scan.nextLine());
+			}
+			scan.close();
+			
+			scan = new Scanner(new File("data/keywords_S.txt"));
+			while(scan.hasNextLine()){
+				keywords_S.add(scan.nextLine());
+			}
+			scan.close();
+			
+			scan = new Scanner(new File("data/keywords_G.txt"));
+			while(scan.hasNextLine()){
+				keywords_G.add(scan.nextLine());
+			}
+			scan.close();
+			
+		}catch(Exception e){
+			
+		}
+		
+	}
+	
+	/* add MovieDB.Person.name (only last name) and MovieDB.Movie.name
 	 */
 	private void loadKeyWordSetsForMovie(){
 		connectToDB(Config.getMovieDB());
 		try {
 			ResultSet rs = statement.executeQuery("select * from Person");
 			while(rs.next()){
-				moviePN.add(rs.getString("name"));
+				String personName = rs.getString("name").toLowerCase();
+				int indexSpace = personName.lastIndexOf(" ");
+				String personLastName = personName.substring(indexSpace+1);
+				moviePN.add(personLastName);
+				movie_personName.add(personLastName);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -405,8 +510,8 @@ public class CategoryClassifier {
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM Movie");
 			while(rs.next()){
-				moviePN.add(rs.getString("name"));
-				
+				moviePN.add(rs.getString("name").toLowerCase());
+				movie_movieName.add(rs.getString("name").toLowerCase());
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -425,21 +530,22 @@ public class CategoryClassifier {
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM athletes");
 			while(rs.next()){
-				sportPN.add(rs.getString("name"));
-				sportPN.add(rs.getString("nationality"));
+				sportPN.add(rs.getString("name").toLowerCase());
+				sports_personName.add(rs.getString("name").toLowerCase());
+				sportPN.add(rs.getString("nationality").toLowerCase());
 			}
 			rs.close();
 			
 			rs = statement.executeQuery("SELECT * FROM competitions");
 			while(rs.next()){
-				sportPN.add(rs.getString("name"));
+				sportPN.add(rs.getString("name").toLowerCase());
 			}
 			rs.close();
 			
 			rs = statement.executeQuery("SELECT * FROM results");
 			while(rs.next()){
-				sportPN.add(rs.getString("winner"));
-				sportPN.add(rs.getString("medal"));
+				sportPN.add(rs.getString("winner").toLowerCase());
+				sportPN.add(rs.getString("medal").toLowerCase());
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -459,31 +565,31 @@ public class CategoryClassifier {
 		try {
 			ResultSet rs = statement.executeQuery("SELECT * FROM Cities");
 			while(rs.next()){
-				geographyPN.add(rs.getString("Name"));
+				geographyPN.add(rs.getString("Name").toLowerCase());
 			}
 			rs.close();
 			
 			rs = statement.executeQuery("SELECT * FROM Continents");
 			while(rs.next()){
-				geographyPN.add(rs.getString("Continent"));
+				geographyPN.add(rs.getString("Continent").toLowerCase());
 			}
 			rs.close();
 			
 			rs = statement.executeQuery("SELECT * FROM Countries");
 			while(rs.next()){
-				geographyPN.add(rs.getString("Name"));
+				geographyPN.add(rs.getString("Name").toLowerCase());
 			}
 			rs.close();
 			
 			rs = statement.executeQuery("SELECT * FROM Mountains");
 			while(rs.next()){
-				geographyPN.add(rs.getString("Name"));
+				geographyPN.add(rs.getString("Name").toLowerCase());
 			}
 			rs.close();
 			
 			rs = statement.executeQuery("SELECT * FROM Seas");
 			while(rs.next()){
-				geographyPN.add(rs.getString("Ocean"));
+				geographyPN.add(rs.getString("Ocean").toLowerCase());
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -521,5 +627,25 @@ public class CategoryClassifier {
 	}
 	public TreeSet<String> getGeographyPN() {
 		return geographyPN;
+	}
+	 
+
+	public TreeSet<String> getMovie_movieName() {
+		return movie_movieName;
+	}
+	public TreeSet<String> getMovie_personName() {
+		return movie_personName;
+	}
+	public TreeSet<String> getSports_personName() {
+		return sports_personName;
+	}
+	public TreeSet<String> getKeywords_M() {
+		return keywords_M;
+	}
+	public TreeSet<String> getKeywords_S() {
+		return keywords_S;
+	}
+	public TreeSet<String> getKeywords_G() {
+		return keywords_G;
 	}
 }

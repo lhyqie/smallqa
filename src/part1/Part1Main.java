@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -65,12 +66,11 @@ public class Part1Main extends JFrame {
 		//printParseTree();
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-
-	       Part1Main mainFrame = new Part1Main();
+			Part1Main mainFrame = new Part1Main();
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-		testingPhrase(0.0);
+		testingPhrase(1);
 	}
 	public static void printParseTree(){
 		PrintParseTree app = new PrintParseTree();
@@ -83,11 +83,19 @@ public class Part1Main extends JFrame {
 	public static void testingPhrase(double train_percent){
 		PrintParseTree parseTree = new PrintParseTree();
 		CategoryClassifier classifier = new CategoryClassifier(train_percent);
-//		LinkedList<Question> qList = parseTree.readQuestionsFromFile("data/training_data.txt");
-		LinkedList<Question> qList = classifier.loadTrainingData();
+		LinkedList<Question> qList = classifier.loadTrainingData();		
 		int correct_count = 0;
-		for (int i=0;i<classifier.test_list.length;i++) {
-			Question question = qList.get(classifier.test_list[i]);
+		
+//		for (int i=0;i<classifier.test_list.length;i++) {
+//			Question question = qList.get(classifier.test_list[i]);
+//			System.out.println(question.getCategory()+"!");
+//			System.out.print(question.getId() + " " +question.getText());
+//			String res = classifier.classify(question.getText());
+//			System.out.println(res);
+//			if(res.equalsIgnoreCase(question.getCategory()+""))
+//				correct_count++;
+//		}
+		for (Question question:qList) {
 			System.out.println(question.getCategory()+"!");
 			System.out.print(question.getId() + " " +question.getText());
 			String res = classifier.classify(question.getText());
@@ -95,7 +103,13 @@ public class Part1Main extends JFrame {
 			if(res.equalsIgnoreCase(question.getCategory()+""))
 				correct_count++;
 		}
-		System.out.println("the accuracy is "+ 1.0*correct_count/classifier.test_list.length);
+//		System.out.println("Which is the scary movie by Kubrik with Nicholson?");
+//		System.out.println(classifier.classify("Which is the scary movie by Kubrik with Nicholson?"));
+//		System.out.println("Did a French actor win the oscar in 2012?");
+//		System.out.println(classifier.classify("Did a French actor win the oscar in 2012?"));
+//		System.out.println("Which actress won the oscar in 2012?");
+//		System.out.println(classifier.classify("Which actress won the oscar in 2012?"));
+//		
+		System.out.println("the accuracy is "+ 1.0*correct_count/qList.size());
 	}
-	
 }
