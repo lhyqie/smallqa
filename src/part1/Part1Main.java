@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -13,12 +15,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 public class Part1Main extends JFrame {
 	JTextField questionField = new JTextField(30);
+	JButton printTreeBtn = new JButton("Print the parseTree of questions samples");
 	JButton commitBtn = new JButton("Find category and print parse Tree"); 
 	JTextArea categoryField = new JTextArea(2,50);
 	JTextArea parseTreeField = new JTextArea(10,50);
@@ -26,17 +30,21 @@ public class Part1Main extends JFrame {
 	private int width = 600;
 	private int height = 400;
 	CategoryClassifier classifier;
+	PrintParseTree parser = new PrintParseTree();
 	public Part1Main(){
 		this.setSize(width,height);
+		printTreeBtn.setBounds(10,10, 400,30);
 		questionField.setBounds(30, 30, 400, 30);
 		commitBtn.setBounds(450, 30, 50, 30);
 		categoryField.setBounds(30,100,50,30);
 		parseTreeField.setBounds(30,200,50,30);
+		panel.add(printTreeBtn);
 		panel.add(questionField);
 		panel.add(commitBtn);
 		panel.add(categoryField);
 		panel.add(parseTreeField);
 		categoryField.setEditable(false);
+		parseTreeField.setEditable(false);
 		this.add(panel);
 		this.setVisible(true);
 		this.setResizable(false);
@@ -44,6 +52,26 @@ public class Part1Main extends JFrame {
 		this.setTitle("Part1 of NLP project by Huayi & Weixiang");
 		//add classifier and use it.
 		classifier = new CategoryClassifier(1.0);
+		
+		printTreeBtn.addActionListener(new ActionListener() {
+			JFrame popFrame = new JFrame();
+			JTextArea textArea = new JTextArea(10,20);
+			JScrollPane scrollPane = new JScrollPane(textArea);
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				popFrame.setVisible(true);
+				popFrame.setSize(1000,600);
+				popFrame.getContentPane().add(scrollPane);
+				StringBuffer sb = new StringBuffer();
+				LinkedList<Question> qList = parser.readQuestionsFromFile("data/part1_questions.txt");
+				for (Question question : qList) {
+					String parseTree = parser.getParseTree(question);
+					sb.append((parseTree)+"\n");
+					textArea.setText(sb.toString());
+				}
+			}
+		});
 		
 		commitBtn.addActionListener(new ActionListener() {
 			@Override
@@ -79,7 +107,7 @@ public class Part1Main extends JFrame {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-		testingPhrase(1);
+		//testingPhrase(1);
 	}
 	public static void printParseTree(){
 		PrintParseTree app = new PrintParseTree();

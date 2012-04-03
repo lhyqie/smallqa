@@ -23,3 +23,11 @@ biathlon
 hockey
 curling
 bobsleigh
+ski
+jump
+shorttrack
+figureskating
+giantslalom
+crosscountry
+slalom
+super-g

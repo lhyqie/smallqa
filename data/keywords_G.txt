@@ -19,3 +19,4 @@ highest
 area
 population
 lowest
+altitude
