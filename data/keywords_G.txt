@@ -5,8 +5,6 @@ capitals
 capital
 city
 continent
-country
-countries
 continents
 cities
 mountains

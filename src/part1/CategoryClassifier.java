@@ -185,23 +185,18 @@ public class CategoryClassifier {
 	{
 		Iterator<String> it = voc.iterator();
 		int index = 0;
-		try
-		{
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(file)));
+//		try
+//		{
+//			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(file)));
 			while(it.hasNext())
 			{
 				String term = it.next();
 				term_index.put(term, index);
-				bw.write(index + "\t"+term+"\n");
+//				bw.write(index + "\t"+term+"\n");
 				index++;
 			}
-			bw.close();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//			bw.close();
+//		}
 	}
 	private void get_idf(TreeSet<String> voc, double size)
 	{
@@ -310,9 +305,9 @@ public class CategoryClassifier {
 			boolean tag_front = false;
 			boolean tag_after = false;
 			if(index < 0) continue;
-			if(index==0 || !Character.isAlphabetic(text.charAt(index-1)))
+			if(index==0 || !Character.isLetterOrDigit(text.charAt(index-1)))
 				tag_front = true;
-			if(index + str.length()==text.length() || !Character.isAlphabetic(text.charAt(index + str.length()))){
+			if(index + str.length()==text.length() || !Character.isLetterOrDigit(text.charAt(index + str.length()))){
 				tag_after = true;
 			}
 			if(tag_front && tag_after){
@@ -441,7 +436,7 @@ public class CategoryClassifier {
 				e.printStackTrace();
 			}
 			System.out.print("¡¾4 none ¡¿");
-			return "";
+			return "None";
 		
 	}
 	private void connectToDB(String dbName){

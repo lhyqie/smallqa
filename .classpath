@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/stanford-parser-2012-03-09-models.jar"/>
 	<classpathentry kind="lib" path="lib/weka.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry kind="lib" path="data.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

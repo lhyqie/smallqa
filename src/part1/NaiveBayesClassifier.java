@@ -82,7 +82,7 @@ public class NaiveBayesClassifier {
 			for (int i =0 ; i<testData.size(); i++) {
 				System.out.println(classLabels[(int)testData.get(i).classValue()]+"!");
 				double dist[] = nb.distributionForInstance(testData.get(i));
-				System.out.println(Arrays.toString(dist));
+				//System.out.println(Arrays.toString(dist));
 				System.out.println(classLabels[(int)nb.classifyInstance(testData.get(i))]);
 				System.out.println();
 			}

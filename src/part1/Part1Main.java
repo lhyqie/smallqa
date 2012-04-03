@@ -56,8 +56,17 @@ public class Part1Main extends JFrame {
 						    JOptionPane.WARNING_MESSAGE);
 					return ;
 				}
-				
-				categoryField.setText(classifier.classify(text));
+				String label = classifier.classify(text);
+				String t = "";
+				if(label.startsWith("G"))
+					t = "World Geography";
+				else if(label.startsWith("M"))
+					t = "IMDB Movie";
+				else if(label.startsWith("S"))
+					t = "Winter Olympics";
+				else
+					t = "Unknow";
+				categoryField.setText(t);
 				parseTreeField.setText(PrintParseTree.getParseTree(new Question(text)));
 			}
 		});
