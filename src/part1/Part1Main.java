@@ -54,7 +54,7 @@ public class Part1Main extends JFrame {
 		classifier = new CategoryClassifier(1.0);
 		
 		printTreeBtn.addActionListener(new ActionListener() {
-			JFrame popFrame = new JFrame();
+			JFrame popFrame = new JFrame("parse trees for specified questions");
 			JTextArea textArea = new JTextArea(10,20);
 			JScrollPane scrollPane = new JScrollPane(textArea);
 			@Override
@@ -63,6 +63,7 @@ public class Part1Main extends JFrame {
 				popFrame.setVisible(true);
 				popFrame.setSize(1000,600);
 				popFrame.getContentPane().add(scrollPane);
+				textArea.setEditable(false);
 				StringBuffer sb = new StringBuffer();
 				LinkedList<Question> qList = parser.readQuestionsFromFile("data/part1_questions.txt");
 				for (Question question : qList) {
