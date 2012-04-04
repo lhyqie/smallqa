@@ -10,7 +10,6 @@ cities
 mountains
 mountain
 sea
-occean
 deep
 deepest
 high
@@ -20,3 +19,24 @@ area
 population
 lowest
 altitude
+Everest
+Mount
+Kangchenjunga
+Lhosts
+Makalu
+Slovenia
+Luxembourg
+Porto-Novo
+Cape Town
+Manama
+Pretoria
+Cotonou
+Bloemfontein
+Pacific
+Arctic
+Atlantic
+Ocean
+Antarctica
+Switzerland
+Benin
+San Marino
