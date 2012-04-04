@@ -108,7 +108,7 @@ public class Part1Main extends JFrame {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
-		//testingPhrase(1);
+//		testingPhrase(1);
 	}
 	public static void printParseTree(){
 		PrintParseTree app = new PrintParseTree();
