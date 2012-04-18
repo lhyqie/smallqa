@@ -67,18 +67,32 @@ public class SemanticAttachment {
 			setSemanticForNode(root,child);
 		}
 		Rule r = node.rule;
-		// (0) ROOT => *
+		//  (0) ROOT => *
 		if (r.left.equals("ROOT")){
 			r.sem = node.children.get(0).rule.sem;
 		}// (1) VB => direct
 		else if(r.left.equals("VB") && r.right.size() ==1 && r.right.get(0).equalsIgnoreCase("direct")){
-			r.sem_type = r.SEMANTIC_ATOM;
 			r.sem = "(lambda :y :x)" +
 					"{[FROM] += FROM Person P INNER JOIN Director D ON P.id = D.director_id INNER JOIN Movie M ON D.movie_id = M.id ," +
 					"[WHERE] += P.Name LIKE '%:x' ," +
 					"[WHERE] += M.name LIKE '%:y%' ," +
 					"}";
-		}// (2) NNP => Romeo 
+		}// (1.2) VB => star
+		else if(r.left.equals("VB") && r.right.size() ==1 && r.right.get(0).equalsIgnoreCase("star")){
+			r.sem = "(lambda :y :x)" +
+					"{[FROM] += FROM Person P INNER JOIN Actor A ON P.id = A.actor_id INNER JOIN Movie M ON A.movie_id = M.id ," +
+					"[WHERE] += P.Name LIKE '%:x' ," +
+					"[WHERE] += M.name LIKE '%:y%' ," +
+					"}";
+		}// (1.3) VB => act
+		else if(r.left.equals("VB") && r.right.size() ==1 && r.right.get(0).equalsIgnoreCase("act")){
+			r.sem = "(lambda :y :x)" +
+					"{[FROM] += FROM Person P INNER JOIN Actor A ON P.id = A.actor_id INNER JOIN Movie M ON A.movie_id = M.id ," +
+					"[WHERE] += P.Name LIKE '%:x' ," +
+					"[WHERE] += M.name LIKE '%:y%' ," +
+					"}";
+		}
+		// (2) NNP => Romeo 
 		else if(r.left.equals("NNP") && r.right.size() == 1){
 			r.sem = new String(r.right.get(0));
 		}// (3) NP => NNP
@@ -88,14 +102,31 @@ public class SemanticAttachment {
 		}// (4) VP => VB NP
 		else if(r.left.equals("VP") && r.right.size() == 2 && r.right.get(0).equals("VB") && r.right.get(1).equals("NP") ){
 			r.sem = node.children.get(0).rule.sem+="<"+ node.children.get(1).rule.sem +">";
+		}// (4.2) VP => VB PP
+		else if(r.left.equals("VP") && r.right.size() == 2 && r.right.get(0).equals("VB") && r.right.get(1).equals("PP") ){
+			r.sem = node.children.get(0).rule.sem+="<"+ node.children.get(1).rule.sem +">";
 		}// (5) VBD  => did
 		else if(r.left.equals("VBD") && r.right.size() ==1 && r.right.get(0).equalsIgnoreCase("did")){
 			r.sem = null;
-		}// (6) . = > ?
+		}// (6) PP => IN NP {PP.sem(NP.sem)}
+		else if(r.left.equals("PP") && r.right.size() ==2 && r.right.get(0).equalsIgnoreCase("IN") && r.right.get(1).equalsIgnoreCase("NP")){
+			r.sem = node.children.get(1).rule.sem;
+		}
+		// (7) . = > ?
 		else if(r.left.equals(".")){
 			r.sem = null;
-		}// (7) SQ => VBD NP VP .
+		}// (8) SQ => VBD NP VP .
 		else if(r.left.equals("SQ") && r.right.size() == 4 && r.right.get(0).equals("VBD")
+				&& r.right.get(1).equals("NP") && r.right.get(2).equals("VP")){
+			r.sem = "[SELECT] += SELECT count(*)," +
+				     node.children.get(2).rule.sem + "<" + node.children.get(1).rule.sem +">";
+		}// (8.2) SQ => NNP NP VP .
+		else if(r.left.equals("SQ") && r.right.size() == 4 && r.right.get(0).equals("NNP")
+				&& r.right.get(1).equals("NP") && r.right.get(2).equals("VP")){
+			r.sem = "[SELECT] += SELECT count(*)," +
+				     node.children.get(2).rule.sem + "<" + node.children.get(1).rule.sem +">";
+		}// (8.3) SQ => VBP NP VP . {SQ.sem(NP.sem)}
+		else if(r.left.equals("SQ") && r.right.size() == 4 && r.right.get(0).equals("VBP")
 				&& r.right.get(1).equals("NP") && r.right.get(2).equals("VP")){
 			r.sem = "[SELECT] += SELECT count(*)," +
 				     node.children.get(2).rule.sem + "<" + node.children.get(1).rule.sem +">";

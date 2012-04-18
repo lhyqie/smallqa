@@ -74,10 +74,14 @@ public class SemanticAttachmentTest {
 		 System.out.println(node.rule.sem);	
 	}
 	
-	//@Test
+	@Test
 	public void testSetSemantic() {
+	   //String question = "Did Cameron direct Titanic?";
+	   //String question = "Did Dicaprio star Titanic?";
+	   //String question = "Did Dicaprio star in Titanic?";
+		 String question = "Do Dicaprio act in Titanic?"; 
 		 RuleTree rTree = new RuleTree(null);
-		 SemanticAttachment.getRulesAndRelation("Did Allen direct Romeo?", rTree);
+		 SemanticAttachment.getRulesAndRelation(question, rTree);
 		 rTree.print();
 		 System.out.println();
 		 
@@ -99,7 +103,7 @@ public class SemanticAttachmentTest {
 		String sql = SemanticAttachment.translateToSQL(sqlSem);
 		System.out.println("sql = \n "+sql);
 	}
-	@Test
+	//@Test
 	public void testQuestionToSQL(){
 		String question = "Did Cameron direct Titanic?";
 		String sql = SemanticAttachment.questionToSQL(question);

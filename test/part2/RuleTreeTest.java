@@ -13,7 +13,7 @@ public class RuleTreeTest {
 		 rTree.print();
 	}
 
-	@Test
+	//@Test
 	public void testGetParentNode() {
 		 RuleTree rTree = new RuleTree(null);
 		 SemanticAttachment.getRulesAndRelation("Did Allen direct Romeo?", rTree);
