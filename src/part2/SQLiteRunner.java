@@ -11,6 +11,7 @@ import part1.CategoryClassifier;
 
 public class SQLiteRunner {
 	SQLiteRunner(){}
+
 	public static String getSQLResult(String dbName, String sql){
 		  String ret = "";
 		  Connection connection = null;  

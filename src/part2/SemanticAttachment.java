@@ -102,7 +102,7 @@ public class SemanticAttachment {
 		}// (4) VP => VB NP
 		else if(r.left.equals("VP") && r.right.size() == 2 && r.right.get(0).equals("VB") && r.right.get(1).equals("NP") ){
 			r.sem = node.children.get(0).rule.sem+="<"+ node.children.get(1).rule.sem +">";
-		}// (4.2) VP => VB PP
+		}// (4.2) VP => VB PP {VP.sem(VB.sem)}
 		else if(r.left.equals("VP") && r.right.size() == 2 && r.right.get(0).equals("VB") && r.right.get(1).equals("PP") ){
 			r.sem = node.children.get(0).rule.sem+="<"+ node.children.get(1).rule.sem +">";
 		}// (5) VBD  => did
