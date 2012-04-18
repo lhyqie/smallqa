@@ -26,6 +26,7 @@ public class Part1Main extends JFrame {
 	JButton commitBtn = new JButton("Find category and print parse Tree"); 
 	JTextArea categoryField = new JTextArea(2,50);
 	JTextArea parseTreeField = new JTextArea(10,50);
+	JScrollPane parseTreePane = new JScrollPane(parseTreeField);
 	JPanel panel = new JPanel(); 
 	private int width = 600;
 	private int height = 400;
@@ -42,7 +43,7 @@ public class Part1Main extends JFrame {
 		panel.add(questionField);
 		panel.add(commitBtn);
 		panel.add(categoryField);
-		panel.add(parseTreeField);
+		panel.add(parseTreePane);
 		categoryField.setEditable(false);
 		parseTreeField.setEditable(false);
 		this.add(panel);

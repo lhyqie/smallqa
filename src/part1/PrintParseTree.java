@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
+import common.LoadStanfordParserModel;
+
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.objectbank.TokenizerFactory;
@@ -27,8 +29,7 @@ import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 
 public class PrintParseTree {
-	static LexicalizedParser lp = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
-	
+	static LexicalizedParser lp = LoadStanfordParserModel.getModel();
 	/* 
 	 * Input: relative path of file storing the questions
 	 * Output: a collection of Questions

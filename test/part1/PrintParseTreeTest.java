@@ -20,7 +20,7 @@ public class PrintParseTreeTest {
 			System.out.println(question);
 		}
 	}
-	//@Test
+	@Test
 	public void testGetParseTree() {
 		String res = tester.getParseTree(new Question("qid","This is a question"));
 		System.out.println(res);
