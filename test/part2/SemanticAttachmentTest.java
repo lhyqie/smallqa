@@ -19,58 +19,61 @@ public class SemanticAttachmentTest {
 	//@Test
 	public void testSetSemanticForNode() {
 		 RuleTree rTree = new RuleTree(null);
-		 SemanticAttachment.getRulesAndRelation("Did Allen direct Romeo?", rTree);
+		 String question = "Did Allen direct Romeo?";
+		 SemanticAttachment.getRulesAndRelation(question, rTree);
 		 rTree.print();
 		 System.out.println();
+		 
+		 String cat = "M";
 		 
 		 RuleTree node = null;
 		 // test (1) VB => direct
 		 System.out.println("\ntest 1 VB=>direct"); 
 		 node = rTree.children.get(0).children.get(2).children.get(0);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);
 		 
 		 // test (2) NNP => Romeo  
 		 System.out.println("\ntest 2 NNP=>Romeo"); 
 		 node = rTree.children.get(0).children.get(2).children.get(1).children.get(0);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);
 		 
 		 // test (3) NP => NNP
 		 System.out.println("\ntest 3 NP=>NNP"); 
 		 node = rTree.children.get(0).children.get(2).children.get(1);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);		 
 		 
 		 //test (4) NP => NNP 
 		 System.out.println("\ntest 4 NP=>NNP"); 
 		 node = rTree.children.get(0).children.get(2);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);	
 		 
 		 //test (5) NNP=>Allen
 		 System.out.println("\ntest 5 NNP=>Allen"); 
 		 node = rTree.children.get(0).children.get(1).children.get(0);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);	
 		 
 		 //test (3) NP=>NNP
 		 System.out.println("\ntest 3 NP=>NNP=>Allen"); 
 		 node = rTree.children.get(0).children.get(1);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);	
 		 
 		 //test (7) SQ => VBD NP VP .
 		 System.out.println("\ntest 7 SQ => VBD NP VP ."); 
 		 node = rTree.children.get(0);
 		 System.out.println(node);
-		 SemanticAttachment.setSemanticForNode(rTree, node);
+		 SemanticAttachment.setSemanticForNode(cat, rTree, node, question);
 		 System.out.println(node.rule.sem);	
 	}
 	
@@ -79,13 +82,17 @@ public class SemanticAttachmentTest {
 	   //String question = "Did Cameron direct Titanic?";
 	   //String question = "Did Dicaprio star Titanic?";
 	   //String question = "Did Dicaprio star in Titanic?";
-		 String question = "Do Dicaprio act in Titanic?"; 
+	   //String question = "Do Dicaprio act in Titanic?";
+	   //String question = "Did Neeson star in Schindler's List ?";
+		 String question = "Did Swank win the oscar in 2000 ?";
+		
+		 question = Wrapper.annotateNNP("M", question);
 		 RuleTree rTree = new RuleTree(null);
 		 SemanticAttachment.getRulesAndRelation(question, rTree);
 		 rTree.print();
 		 System.out.println();
 		 
-		 SemanticAttachment.setSemantic(rTree);
+		 SemanticAttachment.setSemantic("M",rTree, question);
 		 
 		 rTree.print();
 		 System.out.println();
@@ -106,7 +113,8 @@ public class SemanticAttachmentTest {
 	//@Test
 	public void testQuestionToSQL(){
 		String question = "Did Cameron direct Titanic?";
-		String sql = SemanticAttachment.questionToSQL(question);
+		String cat ="M";
+		String sql = SemanticAttachment.questionToSQL(cat, question);
 		System.out.println("sql = \n" + sql);
 	}
 }

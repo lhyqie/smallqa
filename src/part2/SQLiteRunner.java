@@ -4,14 +4,70 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import common.Config;
 
-import part1.CategoryClassifier;
+
 
 public class SQLiteRunner {
 	SQLiteRunner(){}
-
+	public static ArrayList<String> getMovieNameList(){
+		  ArrayList<String> movieNameList = new ArrayList<String>();
+		  Connection connection = null;  
+		  Statement statement = null; 
+	      ResultSet rs  = null;  
+	      try {  
+	          Class.forName("org.sqlite.JDBC");  
+	          connection = DriverManager  
+	                  .getConnection("jdbc:sqlite:data/db/"+Config.getMovieDB());  
+	          statement = connection.createStatement();  
+	          rs = statement.executeQuery("select name from Movie");  
+	          while (rs.next()) {  
+	        	  movieNameList.add(rs.getString("name"));
+	          }  
+	      } catch (Exception e) {  
+	          e.printStackTrace();  
+	      } finally {  
+	          try {  
+	              rs.close();  
+	              statement.close();  
+	              connection.close();  
+	          } catch (Exception e) {  
+	              e.printStackTrace();  
+	          }  
+	      }  
+	      return movieNameList;
+	}
+	public static ArrayList<String> getMovieWorkerNameList(){
+		  ArrayList<String> movieWorkerNameList = new ArrayList<String>();
+		  Connection connection = null;  
+		  Statement statement = null; 
+	      ResultSet rs  = null;  
+	      try {  
+	          Class.forName("org.sqlite.JDBC");  
+	          connection = DriverManager  
+	                  .getConnection("jdbc:sqlite:data/db/"+Config.getMovieDB());  
+	          statement = connection.createStatement();  
+	          rs = statement.executeQuery("select name from Person");  
+	          while (rs.next()) {  
+	        	  String name = rs.getString("name");
+	        	  String pieces[] = name.split(" ");
+	        	  if(pieces.length==2 ) movieWorkerNameList.add(pieces[1]);
+	          }  
+	      } catch (Exception e) {  
+	          e.printStackTrace();  
+	      } finally {  
+	          try {  
+	              rs.close();  
+	              statement.close();  
+	              connection.close();  
+	          } catch (Exception e) {  
+	              e.printStackTrace();  
+	          }  
+	      }  
+	      return movieWorkerNameList;
+	}
 	public static String getSQLResult(String dbName, String sql){
 		  String ret = "";
 		  Connection connection = null;  

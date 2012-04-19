@@ -55,16 +55,16 @@ public class SemanticAttachment {
 	 *   Input: the RuleTree root
 	 *   Output: assign the semantic attachment to each node of the tree
 	 */
-	public static void setSemantic(RuleTree root){
-		setSemanticForNode(root,root);
+	public static void setSemantic(String cat, RuleTree root, String annotatedQuestion){
+		setSemanticForNode(cat, root, root , annotatedQuestion);
 	}
 	/*
 	 * 	  recursive function called by setSemantic, set semantic attachment in a bottom up manner
 	 */
-	public static void setSemanticForNode(RuleTree root, RuleTree node){
+	public static void setSemanticForNode(String cat, RuleTree root, RuleTree node, String annotatedQuestion){
 		if(node == null || root ==null) return ;
 		for (RuleTree child : node.children) {
-			setSemanticForNode(root,child);
+			setSemanticForNode(cat, root, child, annotatedQuestion);
 		}
 		Rule r = node.rule;
 		//  (0) ROOT => *
@@ -91,6 +91,27 @@ public class SemanticAttachment {
 					"[WHERE] += P.Name LIKE '%:x' ," +
 					"[WHERE] += M.name LIKE '%:y%' ," +
 					"}";
+		}// (1.4) VB => win
+		else if(r.left.equals("VB") && r.right.size() ==1 && r.right.get(0).equalsIgnoreCase("win")){
+			if(cat.equals("M")){
+				// Movie win  or Person win 
+				if(annotatedQuestion.contains("MOVIE-")){
+					r.sem = "(lambda :x)" +
+							"{[FROM] += FROM Person P INNER JOIN Oscar O ON P.id = O.person_id INNER JOIN Movie M ON O.movie_id = M.id ," +
+							"[WHERE] += M.Name LIKE '%:x' " +
+							"}";
+				}else if(annotatedQuestion.contains("MOVIEWORKER-")){
+					r.sem = "(lambda :x)" +
+							"{[FROM] += FROM Person P INNER JOIN Oscar O ON P.id = O.person_id INNER JOIN Movie M ON O.movie_id = M.id ," +
+							"[WHERE] += P.Name LIKE '%:x'" +
+							"}";
+				}
+					
+			}else if(cat.equals("S")){
+				
+			}else if(cat.equals("G")){
+				
+			}
 		}
 		// (2) NNP => Romeo 
 		else if(r.left.equals("NNP") && r.right.size() == 1){
@@ -99,7 +120,7 @@ public class SemanticAttachment {
 		else if(r.left.equals("NP") && r.right.size() == 1 && r.right.get(0).equals("NNP")){
 		//	r.sem = new String(r.)
 			r.sem = node.children.get(0).rule.sem;
-		}// (4) VP => VB NP
+		}// (4) VP => VB NP   {VP.sem(VB.sem)}
 		else if(r.left.equals("VP") && r.right.size() == 2 && r.right.get(0).equals("VB") && r.right.get(1).equals("NP") ){
 			r.sem = node.children.get(0).rule.sem+="<"+ node.children.get(1).rule.sem +">";
 		}// (4.2) VP => VB PP {VP.sem(VB.sem)}
@@ -208,13 +229,16 @@ public class SemanticAttachment {
 	/*
 	 *  question to SQL code
 	 */
-	public static String questionToSQL(String question){
+	public static String questionToSQL(String cat, String question){
 		 RuleTree rTree = new RuleTree(null);
 		 SemanticAttachment.getRulesAndRelation(question, rTree);
-		 SemanticAttachment.setSemantic(rTree);
+		 SemanticAttachment.setSemantic(cat, rTree, question);
 		 String sqlSem = rTree.rule.sem;
+		 System.out.println("¡¾ sqlsem WITHOUT reduction¡¿:" + sqlSem);
 	     sqlSem = SemanticAttachment.lamdaReduction(sqlSem);
+	     System.out.println("¡¾ sqlsem WITH reduction¡¿:" + sqlSem);
 		 String sql = SemanticAttachment.translateToSQL(sqlSem);
+		 
 		 return sql;
 	}
 }
