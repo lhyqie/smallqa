@@ -40,7 +40,7 @@ public class GetKeywords
 			ResultSet rs = statement.executeQuery("SELECT * FROM athletes");
 			while(rs.next()){
 //				sportPN.add(rs.getString("name").toLowerCase());
-				sports_personName.add(rs.getString("nationality").toLowerCase());
+				sports_personName.add(rs.getString("name").toLowerCase());
 //				sportPN.add(rs.getString("nationality").toLowerCase());
 			}
 			rs.close();
@@ -66,7 +66,7 @@ public class GetKeywords
 		while(it.hasNext())
 		{
 			String str = it.next();
-			System.out.print("\""+str+"\",");
+			System.out.println(str);
 		}
 	}
 	public static void main(String[] args)
