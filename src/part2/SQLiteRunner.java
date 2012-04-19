@@ -68,6 +68,33 @@ public class SQLiteRunner {
 	      }  
 	      return movieWorkerNameList;
 	}
+	public static ArrayList<String> getMovieWorkerPOBList(){
+		  ArrayList<String> movieWorkerPOBs = new ArrayList<String>();
+		  Connection connection = null;  
+		  Statement statement = null; 
+	      ResultSet rs  = null;  
+	      try {  
+	          Class.forName("org.sqlite.JDBC");  
+	          connection = DriverManager  
+	                  .getConnection("jdbc:sqlite:data/db/"+Config.getMovieDB());  
+	          statement = connection.createStatement();  
+	          rs = statement.executeQuery("select pob from Person");  
+	          while (rs.next()) {  
+	        	  movieWorkerPOBs.add(rs.getString("pob"));
+	          }  
+	      } catch (Exception e) {  
+	          e.printStackTrace();  
+	      } finally {  
+	          try {  
+	              rs.close();  
+	              statement.close();  
+	              connection.close();  
+	          } catch (Exception e) {  
+	              e.printStackTrace();  
+	          }  
+	      }  
+	      return movieWorkerPOBs;
+	}
 	public static String getSQLResult(String dbName, String sql){
 		  String ret = "";
 		  Connection connection = null;  

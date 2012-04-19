@@ -22,9 +22,15 @@ public class SQLiteRunnerTest {
 		System.out.println(movieNameList);
 		System.out.println(movieNameList.size());
 	}
-	@Test
+	//@Test
 	public void testGetMovieWorkerNameList(){
 		ArrayList<String> movieWorkerNameList = SQLiteRunner.getMovieWorkerNameList();
+		System.out.println(movieWorkerNameList);
+		System.out.println(movieWorkerNameList.size());
+	}
+	@Test
+	public void testGetMovieWorkerPOBList(){
+		ArrayList<String> movieWorkerNameList = SQLiteRunner.getMovieWorkerPOBList();
 		System.out.println(movieWorkerNameList);
 		System.out.println(movieWorkerNameList.size());
 	}
