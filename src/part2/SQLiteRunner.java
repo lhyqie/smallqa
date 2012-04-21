@@ -22,7 +22,7 @@ public class SQLiteRunner {
 	          connection = DriverManager  
 	                  .getConnection("jdbc:sqlite:data/db/"+Config.getMovieDB());  
 	          statement = connection.createStatement();  
-	          rs = statement.executeQuery("select name from Movie");  
+	          rs = statement.executeQuery("select name from Movie order by name desc");  
 	          while (rs.next()) {  
 	        	  movieNameList.add(rs.getString("name"));
 	          }  
@@ -114,8 +114,8 @@ public class SQLiteRunner {
 	        	  for (int i = 1; i <= numberOfColumns; i++) {
 	        		   int type = rsMetaData.getColumnType(i); 
 					   switch(type){
-					   		case java.sql.Types.INTEGER: ret += resultSet.getInt(i); break;
-					   		case java.sql.Types.VARCHAR: ret += resultSet.getString(i); break;
+					   		case java.sql.Types.INTEGER: ret += resultSet.getInt(i)+"\t"; break;
+					   		case java.sql.Types.VARCHAR: ret += resultSet.getString(i)+"\t"; break;
 					   }
 				  }
 	        	  ret+="\n";
@@ -131,6 +131,6 @@ public class SQLiteRunner {
 	              e.printStackTrace();  
 	          }  
 	      }  
-	      return ret;
+	      return ret.trim();
 	}
 }

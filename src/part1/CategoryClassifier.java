@@ -283,15 +283,15 @@ public class CategoryClassifier {
 		String tokens[] = text.split("[ ?,.;:!()]");
 		for (int i = 0; i < tokens.length; i++) {
 			if(keywords_M.contains(tokens[i])) {
-				System.out.print("¡¾Rule 0: keywords inference¡¿");
+				//System.out.print("¡¾Rule 0: keywords inference¡¿");
 				return "M";
 			}
 			if(keywords_S.contains(tokens[i])) {
-				System.out.print("¡¾Rule 0: keywords inference¡¿");
+				//System.out.print("¡¾Rule 0: keywords inference¡¿");
 				return "S";
 			}
 			if(keywords_G.contains(tokens[i])) {
-				System.out.print("¡¾Rule 0: keywords inference¡¿");
+				//System.out.print("¡¾Rule 0: keywords inference¡¿");
 				return "G";
 			}
 		}
@@ -311,7 +311,7 @@ public class CategoryClassifier {
 				tag_after = true;
 			}
 			if(tag_front && tag_after){
-					System.out.print("¡¾Rule 1.1¡¿:" + str);
+					//System.out.print("¡¾Rule 1.1¡¿:" + str);
 					return "M";
 			}
 		}
@@ -324,7 +324,7 @@ public class CategoryClassifier {
 				 
 				 for (String token : pieces) {
 					 if(token.equals(str)){
-						 System.out.print("¡¾Rule 1.2¡¿:" + str);
+						 //System.out.print("¡¾Rule 1.2¡¿:" + str);
 						 return "M"; 
 					 }
 				 }
@@ -416,18 +416,18 @@ public class CategoryClassifier {
 					feature[ind] = frequency * IDF[ind];
 				}
 			}
-			System.out.println("feature="+Arrays.toString(feature));
+			//System.out.println("feature="+Arrays.toString(feature));
 			try
 			{
 				testDataSet.clear();
 				testDataSet.add(new DenseInstance(1.0, feature));
 				double dist[] = nb.distributionForInstance(testDataSet.get(0));
 				for (double d : dist) {
-					System.out.print(d+"\t");
+					//System.out.print(d+"\t");
 				}
-				System.out.println();
+				//System.out.println();
 				double result = nb.classifyInstance(testDataSet.firstInstance());
-				System.out.print("¡¾3 NB ¡¿");
+				//System.out.print("¡¾3 NB ¡¿");
 				return classLabel[(int)result];
 			}
 			catch (Exception e)
@@ -435,7 +435,7 @@ public class CategoryClassifier {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.print("¡¾4 none ¡¿");
+			//System.out.print("¡¾4 none ¡¿");
 			return "None";
 		
 	}
