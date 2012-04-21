@@ -34,13 +34,13 @@ public class GetKeywords
 	}
 	public void get_keywords()
 	{
-		connectToDB(Config.getSportsDB());
+		connectToDB(Config.getGeographyDB());
 		TreeSet<String> sports_personName = new TreeSet<String>();
 		try {
-			ResultSet rs = statement.executeQuery("SELECT * FROM athletes");
+			ResultSet rs = statement.executeQuery("SELECT * FROM Continents");
 			while(rs.next()){
 //				sportPN.add(rs.getString("name").toLowerCase());
-				sports_personName.add(rs.getString("name").toLowerCase());
+				sports_personName.add(rs.getString("continent").toLowerCase());
 //				sportPN.add(rs.getString("nationality").toLowerCase());
 			}
 			rs.close();

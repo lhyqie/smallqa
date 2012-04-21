@@ -1,5 +1,5 @@
 
-package part2;
+package part2b;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,9 @@ import java.util.IdentityHashMap;
 
 import org.junit.Test;
 
+import common.Config;
+
+import part2.SQLiteRunner;
 import part2b.SportsVectorBuilder;
 
 public class SportsVectorBuilderTest {
@@ -19,10 +22,10 @@ public class SportsVectorBuilderTest {
 	public void testSetSemantic() {
 	   //String question = "Did Cameron direct Titanic?";
 	   //String question = "Did Dicaprio star Titanic?";
-	   //String question = "Did Dicaprio star in Titanic?";
-	   //String question = "Do Dicaprio act in Titanic?";
-	   //String question = "Did Neeson star in Schindler's List ?";
-		 String question = "Did Razzoli win the men slalom in 2010?";
+		String question = "what event does ?";
+//		String question = "Who won women figure skating in 2010?";
+//		String question = "Did a Korean woman win the gold medal in figure skating?";
+//		String question = "Did Razzoli win the men slalom in 2010?";
 		SportsVectorBuilder sb = new SportsVectorBuilder();
 		sb.generateQuestionVector(question);
 		
@@ -33,6 +36,11 @@ public class SportsVectorBuilderTest {
 		}
 		System.out.println();
 		System.out.println(Arrays.asList(sb.get_stringvalue()));
+		System.out.println("----------------------------");
+		String sql = sb.generateSQL();
+		System.out.println(sql);
+		
+		System.out.println(SQLiteRunner.getSQLResult(Config.getSportsDB(), sql));
 	}
 
 }

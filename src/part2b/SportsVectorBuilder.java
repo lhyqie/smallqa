@@ -1,6 +1,12 @@
 package part2b;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TreeMap;
 
 import common.LoadStanfordParserModel;
@@ -8,31 +14,39 @@ import common.StringAlgo;
 
 public class SportsVectorBuilder extends VectorBuilder
 {
-	String[] gender_keywords = {"male", "female", "woman", "man", "women","men"};
-	String[] competition_name_keywords = {"biathlon", "skijumping", "ski jumping", "ski-jumping", 
-			"speedskating", "speed skating", "speed-skating", "shorttrack", "short track", "short-track", 
-			"figureskating", "figure skating", "figure-skating", "giantslalom", "giant slalom", "giant-slalom",
-			"crosscountry", "cross country", "cross-country", "slalom", "superg", "super g", "super-g"};
-	String[] competition_type_keywords = {"competition type", "type", "individual", "nh", 
-			"1000", "one thousand", "one-thousand", "500", "five hundreds", "five-hundred", 
-			"1500", "one thousand and five hundreds", "fifteen hundreds", "fifteen-hundred", "lh", "sprint"};
-	String[] athletes_name_keywords = {"aamodt","ammann","andrea","angerer","arakawa","asada",
-			"bauer","baverel-robert","bjorndalen","buttle","bystol","cheek","chenal","cleski",
-			"cohen","davis","dorfmeister","dorin","dorofeyev","efremova","fak","greis","hanevold","hautamaki",
-			"hedda","hedrick","herbst","ho-suk","hoffmann","hosp","huttary","hyun-soo","jay","jiajun",
-			"kang-seok","kim","kofler","kostelic","kramer","kuzmina","lambiel","lee","ljokelsoy","lysacek",
-			"maier","malysz","mancuso","mcivor","meissnitzer","miller","mo","morgenstern","myhrer","neuner","ohno",
-			"olofsson","ottosson","paerson","parson","plushenko","poutiainen","raich","razzoli","riesch","rochette",
-			"schild","schlierenzauer","schonfelder","skobrev","slutskaya","svendsen","takahashi","veerpalu","wennemars",
-			"zurbriggen"};
-	String[] nationality_keywords = {"austria","canada","canadian","china","chinese",
-			"croatia","czech republic","czech","estonia","estonian","finland","france","french",
-			"germany","german","italy","italian","japan","japanese","south korea","south korean",
-			"korea","korean","netherlands","dutch","norway","poland","polish","russia","russian",
-			"slovakia","sweden","swedish","switzerland","swiss","ukraine","usa","american"};
-	String[] medal_keywords = {"gold medal", "gold", "silver medal", "silver", "bronze medal", "bronze", "first place", "second place", "third place"};
-	String[] win_keywords = {"get","gets","got", "win","wins", "won"};
-	String table = "athletes outer left left join (SELECT * FROM competitions natural join results) as cr on athletes.name = cr.winner";
+//	String[] gender_keywords = {"male", "female", "woman", "man", "women","men"};
+//	String[] competition_name_keywords = {"biathlon", "skijumping", "ski jumping", "ski-jumping", 
+//			"speedskating", "speed skating", "speed-skating", "shorttrack", "short track", "short-track", 
+//			"figureskating", "figure skating", "figure-skating", "giantslalom", "giant slalom", "giant-slalom",
+//			"crosscountry", "cross country", "cross-country", "slalom", "superg", "super g", "super-g"};
+//	String[] competition_type_keywords = {"competition type", "type", "individual", "nh", 
+//			"1000", "one thousand", "one-thousand", "500", "five hundreds", "five-hundred", 
+//			"1500", "one thousand and five hundreds", "fifteen hundreds", "fifteen-hundred", "lh", "sprint"};
+//	String[] athletes_name_keywords = {"aamodt","ammann","andrea","angerer","arakawa","asada",
+//			"bauer","baverel-robert","bjorndalen","buttle","bystol","cheek","chenal","cleski",
+//			"cohen","davis","dorfmeister","dorin","dorofeyev","efremova","fak","greis","hanevold","hautamaki",
+//			"hedda","hedrick","herbst","ho-suk","hoffmann","hosp","huttary","hyun-soo","jay","jiajun",
+//			"kang-seok","kim","kofler","kostelic","kramer","kuzmina","lambiel","lee","ljokelsoy","lysacek",
+//			"maier","malysz","mancuso","mcivor","meissnitzer","miller","mo","morgenstern","myhrer","neuner","ohno",
+//			"olofsson","ottosson","paerson","parson","plushenko","poutiainen","raich","razzoli","riesch","rochette",
+//			"schild","schlierenzauer","schonfelder","skobrev","slutskaya","svendsen","takahashi","veerpalu","wennemars",
+//			"zurbriggen"};
+//	String[] nationality_keywords = {"austria","canada","canadian","china","chinese",
+//			"croatia","czech republic","czech","estonia","estonian","finland","france","french",
+//			"germany","german","italy","italian","japan","japanese","south korea","south korean",
+//			"korea","korean","netherlands","dutch","norway","poland","polish","russia","russian",
+//			"slovakia","sweden","swedish","switzerland","swiss","ukraine","usa","american"};
+//	String[] medal_keywords = {"gold medal", "gold", "silver medal", "silver", "bronze medal", "bronze", "first place", "second place", "third place"};
+	String[] win = {"get","gets","got", "win","wins", "won"};
+	ArrayList<String> gender_keywords = new ArrayList<String>();
+	ArrayList<String> competition_name_keywords = new ArrayList<String>();
+	ArrayList<String> competition_type_keywords = new ArrayList<String>();
+	ArrayList<String> athletes_name_keywords = new ArrayList<String>();
+	ArrayList<String> nationality_keywords = new ArrayList<String>();
+	ArrayList<String> medal_keywords = new ArrayList<String>();
+	ArrayList<String> win_keywords = new ArrayList<String>(Arrays.asList(win));
+	
+	String table = "athletes outer left left join (SELECT * FROM competitions natural join results) as cr on athletes.name = cr.winner ";
 	TreeMap<String,String> gender_keywords_map;
 	TreeMap<String,String> competition_name_keywords_map;
 	TreeMap<String,String> competition_type_keywords_map;
@@ -58,11 +72,50 @@ public class SportsVectorBuilder extends VectorBuilder
 		competition_name_keywords_map = new TreeMap<String, String>();
 		competition_type_keywords_map = new TreeMap<String, String>();
 		nationality_keywords_map = new TreeMap<String, String>();
-		
+		load_keywords("data/"+"gender_keywords.txt", gender_keywords, gender_keywords_map);
+		load_keywords("data/"+"competition_name_keywords.txt", competition_name_keywords, competition_name_keywords_map);
+		load_keywords("data/"+"competition_type_keywords.txt", competition_type_keywords, competition_type_keywords_map);
+		load_keywords("data/"+"athletes_name_keywords.txt", athletes_name_keywords, null);
+		load_keywords("data/"+"nationality_keywords.txt", nationality_keywords, nationality_keywords_map);
+		load_keywords("data/"+"medal_keywords.txt", medal_keywords, medal_keywords_map);
 		
 	}
 	
-	private 
+	private void load_keywords(String file, ArrayList<String> list, TreeMap<String, String> map)
+	{
+		try
+		{
+			BufferedReader br = new BufferedReader(new FileReader(new File(file)));
+			String line = br.readLine();
+			while(line!=null)
+			{
+				if(map!=null)
+				{
+					String[] words = line.split("\t");
+					map.put(words[0], words[1]);
+					list.add(words[0]);
+				}
+				else
+				{
+					list.add(line);
+				}
+				line = br.readLine();
+			}
+			br.close();
+		}
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+
 	
 	public void generateQuestionVector(String question)
 	{
@@ -94,11 +147,11 @@ public class SportsVectorBuilder extends VectorBuilder
 			{
 				tag = true;
 				this.qvector[COMPETITION_NAME] = 1;
-				this.sems[COMPETITION_NAME] = competition_name;
+				this.sems[COMPETITION_NAME] = competition_name_keywords_map.get(competition_name);
 				break;
 			}
 		}
-		if(!tag && (question_low.startsWith("what event") || question_low.startsWith("which event")))
+		if(!tag && (question_low.startsWith("what events") ||question_low.startsWith("what event") || question_low.startsWith("which event")))
 		{
 			this.qvector[COMPETITION_NAME] = 1;
 			this.sems[COMPETITION_NAME] = "?";
@@ -112,7 +165,7 @@ public class SportsVectorBuilder extends VectorBuilder
 			{
 				tag = true;
 				this.qvector[NATIONALITY] = 1;
-				this.sems[NATIONALITY] = nationality_name;
+				this.sems[NATIONALITY] = nationality_keywords_map.get(nationality_name);
 				break;
 			}
 		}
@@ -130,7 +183,7 @@ public class SportsVectorBuilder extends VectorBuilder
 			{
 				tag = true;
 				this.qvector[GENDER] = 1;
-				this.sems[GENDER] = gender;
+				this.sems[GENDER] = gender_keywords_map.get(gender);
 				break;
 			}
 		}
@@ -148,7 +201,7 @@ public class SportsVectorBuilder extends VectorBuilder
 			{
 				tag = true;
 				this.qvector[COMPETITION_TYPE] = 1;
-				this.sems[COMPETITION_TYPE] = type;
+				this.sems[COMPETITION_TYPE] = competition_type_keywords_map.get(type);
 				break;
 			}
 		}
@@ -166,7 +219,7 @@ public class SportsVectorBuilder extends VectorBuilder
 			{
 				tag = true;
 				this.qvector[MEDAL] = 1;
-				this.sems[MEDAL] = medal;
+				this.sems[MEDAL] = medal_keywords_map.get(medal);
 				break;
 			}
 		}
@@ -197,11 +250,17 @@ public class SportsVectorBuilder extends VectorBuilder
 	public String generateSQL()
 	{
 		ArrayList<Integer> question_mark = new ArrayList<Integer>();
+		ArrayList<Integer> conditions = new ArrayList<Integer>();
 		String sql = "select ";
 		for(int i=0;i<LENGTH;i++)
 		{
-			if(this.sems[i].indexOf('?')>=0)
-				question_mark.add(i);
+			if(this.sems[i]!=null)
+			{
+				if(this.sems[i].indexOf('?')>=0)
+					question_mark.add(i);
+				else
+					conditions.add(i);
+			}	
 		}
 		if(question_mark.size()==0)
 		{
@@ -210,9 +269,9 @@ public class SportsVectorBuilder extends VectorBuilder
 		else
 		{
 			sql += "distinct ";
-			for(int i:question_mark)
+			for(int i=0;i<question_mark.size();i++)
 			{
-				switch (i)
+				switch (question_mark.get(i))
 				{
 				case ALTHLETE_NAME:
 					sql += "athletes.name ";
@@ -227,17 +286,57 @@ public class SportsVectorBuilder extends VectorBuilder
 					sql += "gender ";
 					break;
 				case COMPETITION_TYPE:
-					sql += 
+					sql += "type ";
 					break;
 				case MEDAL:
+					sql += "medal ";
 					break;
 				case MEDAL_YEAR:
+					sql += "year ";
 					break;
 				default:
 					break;
 				}
+				if(i!=question_mark.size()-1)
+					sql +=", ";
 			}
+			
 		}
+		sql += "from "+ table;
+		if(conditions.size()!=0)
+			sql += "where ";
+		for(int i=0;i<conditions.size();i++)
+		{
+			switch (conditions.get(i))
+			{
+			case ALTHLETE_NAME:
+				sql += "athletes.name like '"+ this.sems[ALTHLETE_NAME]+"' ";
+				break;
+			case COMPETITION_NAME:
+				sql += "cr.name like '"+ this.sems[COMPETITION_NAME]+"' ";
+				break;
+			case NATIONALITY:
+				sql += "nationality like '"+ this.sems[NATIONALITY]+"' ";
+				break;
+			case GENDER:
+				sql += "gender like '"+ this.sems[GENDER]+"' ";
+				break;
+			case COMPETITION_TYPE:
+				sql += "type like '"+ this.sems[COMPETITION_TYPE]+"' ";
+				break;
+			case MEDAL:
+				sql += "medal like '" + this.sems[MEDAL]+"' ";
+				break;
+			case MEDAL_YEAR:
+				sql += "year like '"+ this.sems[MEDAL_YEAR]+"' ";
+				break;
+			default:
+				break;
+			}
+			if(i!=conditions.size()-1)
+				sql +="and ";
+		}
+		return sql;
 	}
 	public int[] get_qvector()
 	{

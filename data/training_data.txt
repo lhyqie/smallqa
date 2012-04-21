@@ -202,7 +202,7 @@ G
 Which country is Cape Town in?
 G
 
-Which countinent is Benin in?
+Which continent is Benin in?
 G
 
 Is South Africa in Australia?
@@ -220,13 +220,13 @@ G
 Which country is on the border of Italy?
 G
 
-Which occean is the deepest?
+Which ocean is the deepest?
 G
 
 What is the height of Mount Everest?
 G
 
-Is Makalu the heighest mountain?
+Is Makalu the highest mountain?
 G
 
 Is Slovenia on the border of Canada?
