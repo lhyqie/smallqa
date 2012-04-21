@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import weka.core.ContingencyTables;
+
 import common.StringAlgo;
 
 public class GeoVectorBuilder extends VectorBuilder
@@ -37,9 +39,10 @@ public class GeoVectorBuilder extends VectorBuilder
 	final int CONTINENT_HIGH = 9;
 	final int CONTINENT_LOW = 10;
 	final int CAPITAL = 11;
+	
 	final int MOUNTAIN_HIGHEST = 12;
 	final int DEEPEST = 13;
-	final int LOWEST = 14;
+	final int CONTINENT_LOWEST = 14;
 	final int CONTINENT_HIGHEST = 15;
 	final int AREA_LARGEST = 16;
 	final int POPULATION_LARGEST = 17;
@@ -338,7 +341,7 @@ public class GeoVectorBuilder extends VectorBuilder
 		if(StringAlgo.contains(question_low, "capital"))
 		{
 			this.qvector[CAPITAL] = 1;
-			this.sems[CAPITAL] = "?";
+			this.sems[CAPITAL] = "#";
 			if((StringAlgo.contains(question_low, "what's")||StringAlgo.contains(question_low, "what")||StringAlgo.contains(question_low, "which")) 
 					&& this.sems[CITY]==null)
 			{
@@ -360,15 +363,149 @@ public class GeoVectorBuilder extends VectorBuilder
 			this.sems[DEEPEST] = "#";
 		}
 //		final int LOWEST = 14;
-//		final int CONTINENT_HIGHEST = 15;
-//		final int AREA_LARGEST = 16;
-//		final int POPULATION_LARGEST = 17;
+		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+				&& StringAlgo.contains(question_low, "lowest"))
+		{
+			this.qvector[CONTINENT_LOWEST] = 1;
+			this.sems[CONTINENT_LOWEST] = "#";
+		}
 		
+//		final int CONTINENT_HIGHEST = 15;
+		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+				&& StringAlgo.contains(question_low, "highest"))
+		{
+			this.qvector[CONTINENT_HIGHEST] = 1;
+			this.sems[CONTINENT_HIGHEST] = "#";
+		}
+//		final int AREA_LARGEST = 16;
+		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+				&& (StringAlgo.contains(question_low, "largest area") || StringAlgo.contains(question_low, "largest")))
+		{
+			this.qvector[AREA_LARGEST] = 1;
+			this.sems[AREA_LARGEST] = "#";
+		}
+//		final int POPULATION_LARGEST = 17;
+		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+				&& (StringAlgo.contains(question_low, "largest population") || StringAlgo.contains(question_low, "most population")))
+		{
+			this.qvector[POPULATION_LARGEST] = 1;
+			this.sems[POPULATION_LARGEST] = "#";
+		}
 		
 		
 	}
+	private String generateSQL_other()
+	{
+		this.qvector[MOUNTAIN] = 0;
+		this.qvector[SEA]=0;
+		this.qvector[MOUNTAIN_HIGH] = 0;
+		this.qvector[SEA_DEEP] = 0;
+		this.sems[MOUNTAIN] = null;
+		this.sems[SEA]=null;
+		this.sems[MOUNTAIN_HIGH] = null;
+		this.sems[SEA_DEEP] = null;
+		
+		final int MOUNTAIN_HIGHEST = 12;
+		final int DEEPEST = 13;
+		ArrayList<Integer> question_mark = new ArrayList<Integer>();
+		ArrayList<Integer> conditions = new ArrayList<Integer>();
+		String sql = "select ";
+		String table = "continents outer left join (select country_id, country_name, city_id, city_name, continentid as continent_id from (select id as country_id, name as country_name, city_id, city_name from countries outer left join (select id as city_id, name as city_name, countryid as country_id from cities outer left join capitals on cities.id = capitals.cityid)  as t on countries.id = t.country_id ) as t2 outer left join countrycontinents on t2.country_id = countrycontinents.countryid) as t3 on continents.id = t3.continent_id ";
+		for(int i=0;i<LENGTH;i++)
+		{
+			if(this.sems[i]!=null)
+			{
+				if(this.sems[i].indexOf('?')>=0)
+					question_mark.add(i);
+				else
+					conditions.add(i);
+			}	
+		}
+		if(question_mark.size()==0)
+		{
+			sql += "count(*) ";
+		}
+		else
+		{
+			sql += "distinct ";
+			for(int i=0;i<question_mark.size();i++)
+			{
+				switch (question_mark.get(i))
+				{
+				case CITY:
+					sql += "city_name ";
+					break;
+				case COUNTRY:
+					sql += "country_name ";
+					break;
+				case CONTINENT:
+					sql += "continent ";
+					break;
+				case CONTINENT_AREA:
+					sql += "area_km2 ";
+					break;
+				case CONTINENT_POPULATION:
+					sql += "population ";
+					break;
+				case CONTINENT_HIGH:
+					sql +="highest ";
+					break;
+				case CONTINENT_LOW:
+					sql +="lowest ";
+					break;
+				default:
+					break;
+				}
+				if(i!=question_mark.size()-1)
+					sql +=", ";
+			}
+		}
+		
+		sql += "from "+ table;
+		if(conditions.contains(CAPITAL))
+		{
+			conditions.remove(conditions.indexOf(CAPITAL));
+		}
+		if(conditions.size()!=0)
+			sql += "where ";
+		for(int i=0;i<conditions.size();i++)
+		{
+			switch (conditions.get(i))
+			{
+			case CITY:
+				sql += "city_name like '"+ this.sems[CITY]+"' ";
+				break;
+			case COUNTRY:
+				sql += "country_name like '"+ this.sems[COUNTRY]+"' ";
+				break;
+			case CONTINENT:
+				sql += "continent like '"+ this.sems[CONTINENT]+"' ";
+				break;
+			case CONTINENT_LOWEST:
+				sql += "lowest = (select max(lowest) from ( "+table+" )) ";
+				break;
+			case CONTINENT_HIGHEST:
+				sql += "highest = (select max(highest) from ( "+table+" )) ";
+				break;
+			case POPULATION_LARGEST:
+				sql += "population = (select max(population) from ( "+table+" )) ";
+				break;
+			case AREA_LARGEST:
+				sql += "area_km2 = (select max(area_km2) from ( "+table+" )) ";
+				break;
+			case CAPITAL:
+				break;
+			default:
+				break;
+			}
+			if(i!=conditions.size()-1)
+				sql +="and ";
+		}
+		return sql;
+	}
 	private String generateSQL_Sea()
 	{
+		
 		ArrayList<Integer> question_mark = new ArrayList<Integer>();
 		ArrayList<Integer> conditions = new ArrayList<Integer>();
 		String sql = "select ";
@@ -498,11 +635,16 @@ public class GeoVectorBuilder extends VectorBuilder
 	@Override
 	public String generateSQL()
 	{
+		if(this.sems[CONTINENT]!=null)
+		{
+			return generateSQL_other();
+		}
 		if(this.sems[MOUNTAIN]!=null)
 			return generateSQL_Mountain();
 		if(this.sems[SEA] != null)
 			return generateSQL_Sea();
-		return "TEST";
+		else return generateSQL_other();
+//		return "TEST";
 	}
 	public int[] get_qvector()
 	{
