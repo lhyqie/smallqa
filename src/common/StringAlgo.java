@@ -20,6 +20,8 @@ public class StringAlgo
 	public static boolean isNumber(String token){
 		for (int i = 0; i < token.length(); i++) {
 			char c = token.charAt(i);
+			if(i==0 && c=='-')
+				continue;
 			if(!Character.isDigit(c)) return false;
 		}
 		return true;

@@ -119,6 +119,7 @@ public class SportsVectorBuilder extends VectorBuilder
 	
 	public void generateQuestionVector(String question)
 	{
+		clear();
 		String question_low = question.toLowerCase();
 		
 		//Athletes name
@@ -345,5 +346,13 @@ public class SportsVectorBuilder extends VectorBuilder
 	public String[] get_stringvalue()
 	{
 		return this.sems;
+	}
+	private void clear()
+	{
+		for(int i=0;i<LENGTH;i++)
+		{
+			this.qvector[i] = 0;
+			this.sems[i] = null;
+		}
 	}
 }
