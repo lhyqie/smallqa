@@ -50,7 +50,7 @@ public class MiniWatsonTest {
 			 "In which movie did Dicaprio get the Best supporting actress in 2010?",
 			 "Who was the best actor in 1940?",	 				 
 	};
-	//@Test
+	@Test
 	public void testAnswerQuestion() {
 		MiniWatson watson = new MiniWatson();
 		for (String question : questions) {
@@ -58,7 +58,7 @@ public class MiniWatsonTest {
 		}	
 	}
 
-	@Test
+	//@Test
 	public void testClassifyCategory() {
 		MiniWatson watson = new MiniWatson();
 		for (String question : questions) {

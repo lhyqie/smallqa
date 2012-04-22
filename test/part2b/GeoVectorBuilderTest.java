@@ -72,11 +72,12 @@ public class GeoVectorBuilderTest {
 			}
 			System.out.println();
 			System.out.println(Arrays.asList(sb.get_stringvalue()));
-			System.out.println("----------------------------");
+			
 			String sql = sb.generateSQL();
 			System.out.println(sql);
 			
 			System.out.println(SQLiteRunner.getSQLResult(Config.getGeographyDB(), sql));
+			System.out.println("---------------------------------------------------------------------------------");
 		}
 	}
 

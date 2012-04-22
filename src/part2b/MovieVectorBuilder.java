@@ -31,32 +31,37 @@ public class MovieVectorBuilder extends VectorBuilder {
 	final int ACT = 13; 	 		//including act play star
 	final int DIRECT = 14;      	//direct
 	final int WIN = 15;
-	final int SIZE = 16;
+	final int CMP = 16;
+	final int SIZE = 17;
 
 	ArrayList<String> movieWorkerLastNames = SQLiteRunner.getMovieWorkerNameList();
 	ArrayList<String> movieNames = SQLiteRunner.getMovieNameList();
 	ArrayList<String> movieWorkerPOBs = SQLiteRunner.getMovieWorkerPOBList();
 	
-	final String ActorWinOscarInMovie    = "1100000000010100";
-	final String DirectorWinOscarInMovie = "1100000000010010";
-	final String PersonWinOscarInMovie   = "1100000000010000";
+	final String ActorWinOscarInMovie    = "11000000000101000";
+	final String DirectorWinOscarInMovie = "11000000000100100";
+	final String PersonWinOscarInMovie   = "11000000000100000";
 	
-	final String ActorWinOscar	     	 = "1000000000010100";
-	final String DirectorWinOscar	     = "1000000000010010";
-	final String PersonWinOscar			 = "1000000000010000";
-	final String MovieWinOscar			 = "0100000000010000";
+	final String ActorWinOscar	     	 = "10000000000101000";
+	final String DirectorWinOscar	     = "10000000000100100";
+	final String PersonWinOscar			 = "10000000000100000";
+	final String MovieWinOscar			 = "01000000000100000";
 	
-	final String ActorMovie              = "1100000000000100";
-	final String DirectorMovie           = "1100000000000010";
+	final String ActorMovie              = "11000000000001000";
+	final String DirectorMovie           = "11000000000000100";
 	
-	final String DOBofPerson             = "1000100000000000";
-	final String POBofPerson             = "1000010000000000";
+	final String DOBofPerson             = "10001000000000000";
+	final String POBofPerson             = "10000100000000000";
 	
-	final String MYearofMovie            = "0100001000000000";
-	final String RatingofMovie			 = "0100000100000000";
-	final String RuntimeOfMovie          = "0100000010000000";
-	final String GenreOfMovie            = "0100000001000000";
-	final String EarningsrankOfMovie     = "0100000000100000";
+	final String MYearofMovie            = "01000010000000000";
+	final String RatingofMovie			 = "01000001000000000";
+	final String RuntimeOfMovie          = "01000000100000000";
+	final String GenreOfMovie            = "01000000010000000";
+	final String EarningsrankOfMovie     = "01000000001000000";
+	
+	final String CMPofPerson             = "10100000000000001";
+	final String CMPofMovie	             = "01010000000000001";
+	
 	@Override
 	public void generateQuestionVector(String question) {
 		// TODO Auto-generated method stub
@@ -77,41 +82,8 @@ public class MovieVectorBuilder extends VectorBuilder {
 			pattern += bit;
 		}
 		//System.out.println(pattern);
-		if(StringAlgo.bitCover(pattern, ActorWinOscarInMovie)){
-			FROM += "FROM Person join Actor on Person.id = Actor.actor_id join Oscar on Actor.movie_id = Oscar.movie_id " +
-					"join Movie on Movie.id = Oscar.movie_id";
-		}else if(StringAlgo.bitCover(pattern, DirectorWinOscarInMovie)){
-			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id join Director on Director.movie_id = Movie.id " +
-					"join Person on Person.id = Director.director_id";
-		}
-		else if(StringAlgo.bitCover(pattern, PersonWinOscarInMovie)){
-			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id join Person on Person.id = Oscar.person_id";
-		}
-		else if(StringAlgo.bitCover(pattern, ActorWinOscar) ||
-			    StringAlgo.bitCover(pattern, DirectorWinOscar) || 
-			    StringAlgo.bitCover(pattern, PersonWinOscar) 
-				)
-		{
-			FROM += "FROM Person join Oscar on Person.id = Oscar.person_id";
-		}else if(StringAlgo.bitCover(pattern, MovieWinOscar)){
-			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id";
-		}else if(StringAlgo.bitCover(pattern, ActorMovie)){
-			FROM += "FROM Person join Actor on Person.id = Actor.actor_id join Movie on Actor.movie_id = Movie.id";
-		}else if(StringAlgo.bitCover(pattern, DirectorMovie)){
-			FROM += "FROM Person join Director on Person.id = Director.director_id join Movie on Director.movie_id = Movie.id";
-		}else if(StringAlgo.bitCover(pattern, DOBofPerson) ||
-				 StringAlgo.bitCover(pattern, POBofPerson) 
-				){
-			FROM += "FROM Person";
-		}else if(StringAlgo.bitCover(pattern, MYearofMovie) ||
-				 StringAlgo.bitCover(pattern, RatingofMovie) ||
-				 StringAlgo.bitCover(pattern, RuntimeOfMovie) ||
-				 StringAlgo.bitCover(pattern, GenreOfMovie) ||
-				 StringAlgo.bitCover(pattern, EarningsrankOfMovie) 
-				){
-			FROM += "FROM MOVIE";
-		}
-		//-----------------begin pattern matching ------------------------------
+		
+		//----------------- begin build SELECT WHERE ------------------------------
 		if(sems[MOVIEWORKERNAME] != null){
 			if(sems[MOVIEWORKERNAME].equals("?")) SELECT+=" Person.name,";
 			else {
@@ -178,68 +150,79 @@ public class MovieVectorBuilder extends VectorBuilder {
 				WHERE += " Oscar.year='"+sems[AWARDYEAR]+"' and";
 			}
 		}
-		/*
-		 *  the following approach has been deprecated
-		 */
-//		//----------------------------BEGIN  FROM -----------------------------------
-//		if(  // Movie + Oscar      //¡Ì
-//				pattern.equals("0100000000011001")
-//		  )
-//		{
-//			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id";
-//		}else if( // Movie
-//					pattern.equals("0100000000100000") ||
-//					pattern.equals("0100000001000000") || 
-//					pattern.equals("0100000010000000") ||
-//					pattern.equals("0100000100000000") ||
-//					pattern.equals("0100000111000100") ||
-//					pattern.equals("0100001000000000") 
-//				 )
-//		{
-//			FROM += "FROM Movie";  
-//		}else if( // Movie + Oscar + Person             //¡Ì
-//					pattern.equals("1000000000011001")
-//				)
-//		{
-//			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id join Person on Person.id = Oscar.person_id";		
-//		}else if( // Movie + Oscar + Director + Person  //¡Ì
-//					pattern.equals("1000000000011010") ||
-//					pattern.equals("1100000000011011")
-//				)
-//		{        
-//			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id join Director on Director.movie_id = Movie.id join Person on Person.id = Director.director_id";
-//		}else if( // Person + Oscar                     //¡Ì
-//					pattern.equals("1000000000011011") ||
-//					pattern.equals("1000000000011101") ||
-//					pattern.equals("1000000000011100") 
-//				)
-//		{
-//			FROM += "FROM Person join Oscar on Person.id = Oscar.person_id";
-//		}else if( // Person   //¡Ì
-//				pattern.equals("1000100000000000") ||
-//				pattern.equals("1000010000000000") 
-//				)
-//		{
-//			FROM += "FROM Person";
-//		}else if( // Person + Director + Movie    //¡Ì
-//				pattern.equals("1100000000000010")
-//				)
-//		{
-//			FROM += "FROM Person join Director on Person.id = Director.director_id join Movie on Director.movie_id = Movie.id";	
-//		}else if( // Person + Actor + Movie    //¡Ì
-//				pattern.equals("1100000000000100")
-//				)
-//		{
-//			FROM += "FROM Person join Actor on Person.id = Actor.actor_id join Movie on Actor.movie_id = Movie.id";
-//		}else if( //Moive + Oscar + Actor + Person //¡Ì
-//				pattern.equals("1100000000011101") ||
-//				pattern.equals("1100000000011100") 
-//				)
-//		{
-//			FROM += "FROM Person join Actor on Person.id = Actor.actor_id join Oscar on Actor.movie_id = Oscar.movie_id join Movie on Movie.id = Oscar.movie_id";
-//		}
-//		//-------------------------------END FROM -------------------------------------	
+		//----------------- end Build SELECT WHERE --------------------------------------
 		
+		//----------------- begin pattern matching CMP ------------------------------
+		if(StringAlgo.bitCover(pattern, CMPofPerson) || StringAlgo.bitCover(pattern, CMPofMovie)  ){
+			String sql1= "", sql2="";
+			if(StringAlgo.bitCover(pattern, CMPofPerson)) {
+				FROM = "FROM Person";
+			}else {
+				FROM = "FROM Movie";
+			}
+			if(SELECT.endsWith(",")) SELECT = SELECT.substring(0,SELECT.length()-1);
+			
+			if(WHERE.length()>0) WHERE = " WHERE "+ WHERE.substring(0, WHERE.length()-"and".length());
+			sql1= SELECT + " " + FROM + " " + WHERE + " limit 0, 1 ";
+			
+			WHERE = "";
+			
+			if(sems[MOVIEWORKERNAME2] != null){
+				if(sems[MOVIEWORKERNAME2].equals("?")) SELECT+=" Person.name,";
+				else {
+					WHERE += " Person.name like '%"+sems[MOVIEWORKERNAME2]+"' and";
+				}
+			}
+			if(sems[MOVIENAME2] != null){
+				if(sems[MOVIENAME2].equals("?")) SELECT+=" Movie.name,";
+				else {
+					WHERE += " Movie.name like '%"+StringAlgo.SQLiteStringGetValid(sems[MOVIENAME2])+"%' and";
+				}
+			}
+			if(WHERE.length()>0) WHERE = " WHERE "+ WHERE.substring(0, WHERE.length()-"and".length());
+			sql2 = SELECT + " " + FROM + " " + WHERE + " limit 0, 1 ";
+			System.out.println("sql1="+sql1);
+			System.out.println("sql2="+sql2);
+			
+			return "SELECT ("+"("+sql1+")"+sems[CMP]+"("+sql2+"))";
+		}
+		
+		//----------------- begin pattern matching NON-CMP ------------------------------
+		if(StringAlgo.bitCover(pattern, ActorWinOscarInMovie)){
+			FROM += "FROM Person join Actor on Person.id = Actor.actor_id join Oscar on Actor.movie_id = Oscar.movie_id " +
+					"join Movie on Movie.id = Oscar.movie_id";
+		}else if(StringAlgo.bitCover(pattern, DirectorWinOscarInMovie)){
+			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id join Director on Director.movie_id = Movie.id " +
+					"join Person on Person.id = Director.director_id";
+		}
+		else if(StringAlgo.bitCover(pattern, PersonWinOscarInMovie)){
+			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id join Person on Person.id = Oscar.person_id";
+		}
+		else if(StringAlgo.bitCover(pattern, ActorWinOscar) ||
+			    StringAlgo.bitCover(pattern, DirectorWinOscar) || 
+			    StringAlgo.bitCover(pattern, PersonWinOscar) 
+				)
+		{
+			FROM += "FROM Person join Oscar on Person.id = Oscar.person_id";
+		}else if(StringAlgo.bitCover(pattern, MovieWinOscar)){
+			FROM += "FROM Movie join Oscar on Movie.id = Oscar.movie_id";
+		}else if(StringAlgo.bitCover(pattern, ActorMovie)){
+			FROM += "FROM Person join Actor on Person.id = Actor.actor_id join Movie on Actor.movie_id = Movie.id";
+		}else if(StringAlgo.bitCover(pattern, DirectorMovie)){
+			FROM += "FROM Person join Director on Person.id = Director.director_id join Movie on Director.movie_id = Movie.id";
+		}else if(StringAlgo.bitCover(pattern, DOBofPerson) ||
+				 StringAlgo.bitCover(pattern, POBofPerson) 
+				){
+			FROM += "FROM Person";
+		}else if(StringAlgo.bitCover(pattern, MYearofMovie) ||
+				 StringAlgo.bitCover(pattern, RatingofMovie) ||
+				 StringAlgo.bitCover(pattern, RuntimeOfMovie) ||
+				 StringAlgo.bitCover(pattern, GenreOfMovie) ||
+				 StringAlgo.bitCover(pattern, EarningsrankOfMovie) 
+				){
+			FROM += "FROM MOVIE";
+		}
+		//------------------end pattern matching ----------------------------
 		if(SELECT.equals("SELECT distinct")) SELECT = "SELECT COUNT(*) ";
 		if(SELECT.endsWith(",")) SELECT = SELECT.substring(0,SELECT.length()-1);
 		if(WHERE.length()>0) WHERE = " WHERE "+ WHERE.substring(0, WHERE.length()-"and".length());
@@ -250,8 +233,13 @@ public class MovieVectorBuilder extends VectorBuilder {
 	//-------------------------------------------------------------------------------------------------------
 	private void generateEntityAspects(String question){
 		question = question.toLowerCase();
-		if( (StringAlgo.contains(question,"when") && (StringAlgo.contains(question,"born") ) || 
-			(StringAlgo.contains(question,"what") && (StringAlgo.contains(question,"birth")) || StringAlgo.contains(question,"birthday")))) {
+		if( (StringAlgo.contains(question,"when") && (StringAlgo.contains(question,"born"))) || 
+			((StringAlgo.contains(question,"what") && (StringAlgo.contains(question,"birth")) || StringAlgo.contains(question,"birthday"))) ||
+			(StringAlgo.contains(question,"older")) || 
+			(StringAlgo.contains(question,"younger")) ||
+			(StringAlgo.contains(question,"age")) ||
+			(StringAlgo.contains(question, "old"))
+		  ) {
 			qvector[DOB] = 1;
 			sems[DOB] = "?";
 		}else if(StringAlgo.contains(question,"where") && StringAlgo.contains(question,"born")){
@@ -283,9 +271,7 @@ public class MovieVectorBuilder extends VectorBuilder {
 		    }
 		}
 		if(
-			(StringAlgo.contains(question,"what's") 
-					|| StringAlgo.contains(question,"what is") )
-			&& (StringAlgo.contains(question,"runtime") || StringAlgo.contains(question,"runtime") )
+			StringAlgo.contains(question,"runtime") || StringAlgo.contains(question,"run-time") 
 		  )
 		{
 			qvector[RUNTIME] = 1;
@@ -294,10 +280,10 @@ public class MovieVectorBuilder extends VectorBuilder {
 		if(StringAlgo.contains(question,"earnings") || StringAlgo.contains(question,"earningsrank") || StringAlgo.contains(question,"earnings-rank")
 			|| StringAlgo.contains(question,"earning") || StringAlgo.contains(question,"earningrank") || StringAlgo.contains(question,"earning-rank")	
 		  ){
-			if( StringAlgo.contains(question,"what's") || StringAlgo.contains(question,"what") ){
+//			if( StringAlgo.contains(question,"what's") || StringAlgo.contains(question,"what") ){
 				qvector[EARNINGS_RANK] = 1;
 				sems[EARNINGS_RANK] = "?";	
-			}
+//			}
 		}
 		if(StringAlgo.contains(question,"rating") || StringAlgo.contains(question,"ratings")){
 			if( StringAlgo.contains(question,"what's") || StringAlgo.contains(question,"what") ){
@@ -397,6 +383,14 @@ public class MovieVectorBuilder extends VectorBuilder {
 			qvector[WIN] = 1;
 			sems[WIN] = "WIN";	
 		}
+		if(StringAlgo.contains(question,"younger") || StringAlgo.contains(question,"shorter") || StringAlgo.contains(question,"lower") || StringAlgo.contains(question,"less")){
+			qvector[CMP] = 1;
+			sems[CMP] = "<";
+		}
+		if(StringAlgo.contains(question,"older") || StringAlgo.contains(question,"longer") || StringAlgo.contains(question,"higher") || StringAlgo.contains(question,"more")){
+			qvector[CMP] = 1;
+			sems[CMP] = ">";
+		}
 	}
 	
 	private void generateEntities(String question){
@@ -414,7 +408,7 @@ public class MovieVectorBuilder extends VectorBuilder {
 			if(StringAlgo.contains(question,movieWorker.toLowerCase())){
 				qvector[MOVIEWORKERNAME] = 1;
 				sems[MOVIEWORKERNAME] = movieWorker;
-				index_of_movieWorker1 = question.indexOf(movieWorker);
+				index_of_movieWorker1 = question.indexOf(movieWorker.toLowerCase());
 				break;
 			}
 		}
@@ -433,7 +427,7 @@ public class MovieVectorBuilder extends VectorBuilder {
 			if(StringAlgo.contains(question,movie.toLowerCase())){
 				qvector[MOVIENAME] = 1;
 				sems[MOVIENAME] = movie;
-				index_of_movie1 = question.indexOf(movie);
+				index_of_movie1 = question.indexOf(movie.toLowerCase());
 				break;
 			}
 		}
