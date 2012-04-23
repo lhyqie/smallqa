@@ -84,11 +84,7 @@ public class GeoVectorBuilderTest {
 			System.out.println(sql);
 			
 			System.out.println(SQLiteRunner.getSQLResult(Config.getGeographyDB(), sql));
-<<<<<<< HEAD
-			System.out.println("----------------------------------");
-=======
 			System.out.println("---------------------------------------------------------------------------------");
->>>>>>> 011bae50e11a1c469c744a9999e1043f02fe5291
 		}
 	}
 
