@@ -26,12 +26,12 @@ public class GeoVectorBuilder extends VectorBuilder
 	TreeMap<String,String> sea_keywords_map;
 	TreeMap<String, String> continent_keywords_map;
 	
-	final int LENGTH = 18;
-	final int CITY = 0;
-	final int COUNTRY = 1;
-	final int MOUNTAIN = 2;
-	final int SEA = 3;
-	final int CONTINENT = 4;
+	final int LENGTH = 28;
+	final int CITY_1 = 0;
+	final int COUNTRY_1 = 1;
+	final int MOUNTAIN_1 = 2;
+	final int SEA_1 = 3;
+	final int CONTINENT_1 = 4;
 	final int MOUNTAIN_HIGH = 5;
 	final int SEA_DEEP = 6;
 	final int CONTINENT_AREA = 7;
@@ -46,6 +46,16 @@ public class GeoVectorBuilder extends VectorBuilder
 	final int CONTINENT_HIGHEST = 15;
 	final int AREA_LARGEST = 16;
 	final int POPULATION_LARGEST = 17;
+	final int CITY_2 = 18;
+	final int COUNTRY_2 = 19;
+	final int MOUNTAIN_2 = 20;
+	final int SEA_2 = 21;
+	final int CONTINENT_2 = 22;
+	final int HIGHER = 23;
+	final int LOWER = 24;
+	final int DEEPER = 25;
+	final int AREA_LARGER = 26;
+	final int POPULATION_LARGER = 27;
 	
 	public GeoVectorBuilder()
 	{
@@ -115,8 +125,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			if(StringAlgo.contains(question_low,name))
 			{
 				tag = true;
-				this.qvector[CITY] = 1;
-				this.sems[CITY] = name;
+				this.qvector[CITY_1] = 1;
+				this.sems[CITY_1] = name;
 				break;
 			}
 		}
@@ -125,8 +135,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			&&(StringAlgo.contains(question_low, "city")||StringAlgo.contains(question_low, "cities"))
 			)
 		{
-			this.qvector[CITY] = 1;
-			this.sems[CITY] = "?";
+			this.qvector[CITY_1] = 1;
+			this.sems[CITY_1] = "?";
 		}
 		
 		//Country
@@ -136,8 +146,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			if(StringAlgo.contains(question_low,name))
 			{
 				tag = true;
-				this.qvector[COUNTRY] = 1;
-				this.sems[COUNTRY] = country_keywords_map.get(name);
+				this.qvector[COUNTRY_1] = 1;
+				this.sems[COUNTRY_1] = country_keywords_map.get(name);
 				break;
 			}
 		}
@@ -146,8 +156,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			&&(StringAlgo.contains(question_low, "country")||StringAlgo.contains(question_low, "nation")||StringAlgo.contains(question_low, "countries")||StringAlgo.contains(question_low, "nations"))
 			)
 		{
-			this.qvector[COUNTRY] = 1;
-			this.sems[COUNTRY] = "?";
+			this.qvector[COUNTRY_1] = 1;
+			this.sems[COUNTRY_1] = "?";
 		}
 		//mountain
 		tag = false;
@@ -156,8 +166,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			if(StringAlgo.contains(question_low,name))
 			{
 				tag = true;
-				this.qvector[MOUNTAIN] = 1;
-				this.sems[MOUNTAIN] = mountain_keywords_map.get(name);
+				this.qvector[MOUNTAIN_1] = 1;
+				this.sems[MOUNTAIN_1] = mountain_keywords_map.get(name);
 				break;
 			}
 		}
@@ -166,8 +176,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			&&(StringAlgo.contains(question_low, "mountain")||StringAlgo.contains(question_low, "mountains"))
 			)
 		{
-			this.qvector[MOUNTAIN] = 1;
-			this.sems[MOUNTAIN] = "?";
+			this.qvector[MOUNTAIN_1] = 1;
+			this.sems[MOUNTAIN_1] = "?";
 		}
 		//Sea
 		tag = false;
@@ -176,8 +186,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			if(StringAlgo.contains(question_low,name))
 			{
 				tag = true;
-				this.qvector[SEA] = 1;
-				this.sems[SEA] = sea_keywords_map.get(name);
+				this.qvector[SEA_1] = 1;
+				this.sems[SEA_1] = sea_keywords_map.get(name);
 				break;
 			}
 		}
@@ -186,8 +196,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			&&(StringAlgo.contains(question_low, "ocean")||StringAlgo.contains(question_low, "oceans")||StringAlgo.contains(question_low, "sea")||StringAlgo.contains(question_low, "seas"))
 			)
 		{
-			this.qvector[SEA] = 1;
-			this.sems[SEA] = "?";
+			this.qvector[SEA_1] = 1;
+			this.sems[SEA_1] = "?";
 		}
 		
 		//continent
@@ -197,8 +207,8 @@ public class GeoVectorBuilder extends VectorBuilder
 			if(StringAlgo.contains(question_low,name))
 			{
 				tag = true;
-				this.qvector[CONTINENT] = 1;
-				this.sems[CONTINENT] = continent_keywords_map.get(name);
+				this.qvector[CONTINENT_1] = 1;
+				this.sems[CONTINENT_1] = continent_keywords_map.get(name);
 				break;
 			}
 		}
@@ -207,12 +217,12 @@ public class GeoVectorBuilder extends VectorBuilder
 			&&(StringAlgo.contains(question_low, "continent")||StringAlgo.contains(question_low, "continents"))
 			)
 		{
-			this.qvector[CONTINENT] = 1;
-			this.sems[CONTINENT] = "?";
+			this.qvector[CONTINENT_1] = 1;
+			this.sems[CONTINENT_1] = "?";
 		}
 		
 		//MOUNTAIN_HIGH
-		if(this.sems[MOUNTAIN]!=null)
+		if(this.sems[MOUNTAIN_1]!=null)
 		{
 			if(StringAlgo.contains(question_low, "height") || StringAlgo.contains(question_low, "high"))
 			{
@@ -234,7 +244,7 @@ public class GeoVectorBuilder extends VectorBuilder
 			}
 		}
 		//SEA_DEEP
-		if(this.sems[SEA]!=null)
+		if(this.sems[SEA_1]!=null)
 		{
 			if(StringAlgo.contains(question_low, "deep") || StringAlgo.contains(question_low, "depth"))
 			{
@@ -255,7 +265,7 @@ public class GeoVectorBuilder extends VectorBuilder
 		}
 		
 		//CONTINENT_AREA
-		if(this.sems[CONTINENT]!=null)
+		if(this.sems[CONTINENT_1]!=null)
 		{
 			if(StringAlgo.contains(question_low, "area") || StringAlgo.contains(question_low, "large") ||StringAlgo.contains(question_low, "big"))
 			{
@@ -276,7 +286,7 @@ public class GeoVectorBuilder extends VectorBuilder
 		}
 		
 		//CONTINENT_POPULATION
-		if(this.sems[CONTINENT]!=null)
+		if(this.sems[CONTINENT_1]!=null)
 		{
 			if(StringAlgo.contains(question_low, "population") || StringAlgo.contains(question_low, "people"))
 			{
@@ -297,7 +307,7 @@ public class GeoVectorBuilder extends VectorBuilder
 		}
 		
 		//CONTINENT_HIGH
-		if(this.sems[CONTINENT]!=null)
+		if(this.sems[CONTINENT_1]!=null)
 		{
 			if(StringAlgo.contains(question_low, "hight") || StringAlgo.contains(question_low, "high"))
 			{
@@ -318,7 +328,7 @@ public class GeoVectorBuilder extends VectorBuilder
 		}
 		
 		//CONTINENT_LOW
-		if(this.sems[CONTINENT]!=null)
+		if(this.sems[CONTINENT_1]!=null)
 		{
 			if(StringAlgo.contains(question_low, "low") || StringAlgo.contains(question_low, "lowest"))
 			{
@@ -343,27 +353,27 @@ public class GeoVectorBuilder extends VectorBuilder
 			this.qvector[CAPITAL] = 1;
 			this.sems[CAPITAL] = "#";
 			if((StringAlgo.contains(question_low, "what's")||StringAlgo.contains(question_low, "what")||StringAlgo.contains(question_low, "which")) 
-					&& this.sems[CITY]==null)
+					&& this.sems[CITY_1]==null)
 			{
-				this.qvector[CITY] = 1;
-				this.sems[CITY] = "?";
+				this.qvector[CITY_1] = 1;
+				this.sems[CITY_1] = "?";
 			}
 				
 		}
 //		final int MOUNTAIN_HIGHEST = 12;
-		if(this.sems[MOUNTAIN]!=null && StringAlgo.contains(question_low, "highest"))
+		if(this.sems[MOUNTAIN_1]!=null && StringAlgo.contains(question_low, "highest"))
 		{
 			this.qvector[MOUNTAIN_HIGHEST] = 1;
 			this.sems[MOUNTAIN_HIGHEST] = "#";
 		}
 //		final int DEEPEST = 13;
-		if(this.sems[SEA]!=null && (StringAlgo.contains(question_low, "deepest")))
+		if(this.sems[SEA_1]!=null && (StringAlgo.contains(question_low, "deepest")))
 		{
 			this.qvector[DEEPEST] = 1;
 			this.sems[DEEPEST] = "#";
 		}
 //		final int LOWEST = 14;
-		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+		if((this.sems[COUNTRY_1]!=null || this.sems[CITY_1]!=null || this.sems[CONTINENT_1]!=null) 
 				&& StringAlgo.contains(question_low, "lowest"))
 		{
 			this.qvector[CONTINENT_LOWEST] = 1;
@@ -371,37 +381,241 @@ public class GeoVectorBuilder extends VectorBuilder
 		}
 		
 //		final int CONTINENT_HIGHEST = 15;
-		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+		if((this.sems[COUNTRY_1]!=null || this.sems[CITY_1]!=null || this.sems[CONTINENT_1]!=null) 
 				&& StringAlgo.contains(question_low, "highest"))
 		{
 			this.qvector[CONTINENT_HIGHEST] = 1;
 			this.sems[CONTINENT_HIGHEST] = "#";
 		}
 //		final int AREA_LARGEST = 16;
-		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+		if((this.sems[COUNTRY_1]!=null || this.sems[CITY_1]!=null || this.sems[CONTINENT_1]!=null) 
 				&& (StringAlgo.contains(question_low, "largest area") || StringAlgo.contains(question_low, "largest")))
 		{
 			this.qvector[AREA_LARGEST] = 1;
 			this.sems[AREA_LARGEST] = "#";
 		}
 //		final int POPULATION_LARGEST = 17;
-		if((this.sems[COUNTRY]!=null || this.sems[CITY]!=null || this.sems[CONTINENT]!=null) 
+		if((this.sems[COUNTRY_1]!=null || this.sems[CITY_1]!=null || this.sems[CONTINENT_1]!=null) 
 				&& (StringAlgo.contains(question_low, "largest population") || StringAlgo.contains(question_low, "most population")))
 		{
 			this.qvector[POPULATION_LARGEST] = 1;
 			this.sems[POPULATION_LARGEST] = "#";
 		}
 		
+		//HIGHER or LOWER
+		if((StringAlgo.contains(question_low, "higher")||StringAlgo.contains(question_low, "taller")||StringAlgo.contains(question_low, "lower")) && StringAlgo.contains(question_low, "than"))
+		{
+			if(StringAlgo.contains(question_low, "higher")||StringAlgo.contains(question_low, "taller"))
+			{
+				this.qvector[HIGHER] = 1;
+				this.sems[HIGHER] = "#";
+			}
+			else
+			{
+				this.qvector[LOWER] = 1;
+				this.sems[LOWER] = "#";
+			}
+			if((StringAlgo.contains(question_low, "which")||StringAlgo.contains(question_low, "what")||StringAlgo.contains(question_low, "what's"))
+					&&(StringAlgo.contains(question_low, "mountain")||StringAlgo.contains(question_low, "mountains")))
+			{
+				this.qvector[MOUNTAIN_1] = 1;
+				this.sems[MOUNTAIN_1] = "?";
+				
+				for(String name: mountain_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						tag = true;
+						this.qvector[MOUNTAIN_2] = 1;
+						this.sems[MOUNTAIN_2] = mountain_keywords_map.get(name);
+						break;
+					}
+				}
+			}
+			else if(this.sems[MOUNTAIN_1]!=null && this.sems[MOUNTAIN_1].indexOf('?')<0)
+			{
+				String first = null;
+				String second = null;
+				for(String name: mountain_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						if(first==null)
+							first = name;
+						else if(!mountain_keywords_map.get(first).equals(mountain_keywords_map.get(name)))
+						{
+							second = name;
+							break;
+						}	
+					}
+				}
+				if(question_low.indexOf(first)>question_low.indexOf(second))
+				{
+					String temp = first;
+					first = second;
+					second = temp;
+				}
+				this.qvector[MOUNTAIN_1] = 1;
+				this.sems[MOUNTAIN_1] = mountain_keywords_map.get(first);
+				this.qvector[MOUNTAIN_2] = 1;
+				this.sems[MOUNTAIN_2] = mountain_keywords_map.get(second);
+			}
+			
+			//CONTINENT
+			if((StringAlgo.contains(question_low, "which")||StringAlgo.contains(question_low, "what")||StringAlgo.contains(question_low, "what's"))
+					&&(StringAlgo.contains(question_low, "continent")||StringAlgo.contains(question_low, "continents")))
+			{
+				this.qvector[CONTINENT_1] = 1;
+				this.sems[CONTINENT_1] = "?";
+				
+				for(String name: continent_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						tag = true;
+						this.qvector[CONTINENT_2] = 1;
+						this.sems[CONTINENT_2] = continent_keywords_map.get(name);
+						break;
+					}
+				}
+			}
+			else if(this.sems[CONTINENT_1]!=null && this.sems[CONTINENT_1].indexOf('?')<0)
+			{
+				String first = null;
+				String second = null;
+				for(String name: continent_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						if(first==null)
+							first = name;
+						else if(!continent_keywords_map.get(first).equals(continent_keywords_map.get(name)))
+						{
+							second = name;
+							break;
+						}	
+					}
+				}
+				if(question_low.indexOf(first)>question_low.indexOf(second))
+				{
+					String temp = first;
+					first = second;
+					second = temp;
+				}
+				this.qvector[CONTINENT_1] = 1;
+				this.sems[CONTINENT_1] = continent_keywords_map.get(first);
+				this.qvector[CONTINENT_2] = 1;
+				this.sems[CONTINENT_2] = continent_keywords_map.get(second);
+			}
+		}
+		
+		//DEEPER
+		if((StringAlgo.contains(question_low, "deeper")) && StringAlgo.contains(question_low, "than"))
+		{
+			this.qvector[DEEPER] = 1;
+			this.sems[DEEPER] = "#";
+			if((StringAlgo.contains(question_low, "which")||StringAlgo.contains(question_low, "what")||StringAlgo.contains(question_low, "what's"))
+					&&(StringAlgo.contains(question_low, "sea")||StringAlgo.contains(question_low, "ocean")))
+			{
+				this.qvector[SEA_1] = 1;
+				this.sems[SEA_1] = "?";
+				
+				for(String name: sea_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						tag = true;
+						this.qvector[SEA_2] = 1;
+						this.sems[SEA_2] = sea_keywords_map.get(name);
+						break;
+					}
+				}
+			}
+			else if(this.sems[SEA_1]!=null && this.sems[SEA_1].indexOf('?')<0)
+			{
+				String first = null;
+				String second = null;
+				for(String name: sea_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						if(first==null)
+							first = name;
+						else if(!sea_keywords_map.get(first).equals(sea_keywords_map.get(name)))
+						{
+							second = name;
+							break;
+						}	
+					}
+				}
+				if(question_low.indexOf(first)>question_low.indexOf(second))
+				{
+					String temp = first;
+					first = second;
+					second = temp;
+				}
+				this.qvector[SEA_1] = 1;
+				this.sems[SEA_1] = sea_keywords_map.get(first);
+				this.qvector[SEA_2] = 1;
+				this.sems[SEA_2] = sea_keywords_map.get(second);
+			}
+		}
+		
+		//LARGER
+		if((StringAlgo.contains(question_low, "larger")||(StringAlgo.contains(question_low, "more")&&(StringAlgo.contains(question_low, "people")||StringAlgo.contains(question_low, "population")))) && StringAlgo.contains(question_low, "than"))
+		{
+			if(StringAlgo.contains(question_low, "population")||StringAlgo.contains(question_low, "people"))
+			{
+				this.qvector[POPULATION_LARGER] = 1;
+				this.sems[POPULATION_LARGER] = "#";
+			}
+			else
+			{
+				this.qvector[AREA_LARGER] = 1;
+				this.sems[AREA_LARGER] = "#";
+			}
+			if((StringAlgo.contains(question_low, "which")||StringAlgo.contains(question_low, "what")||StringAlgo.contains(question_low, "what's"))
+					&&(StringAlgo.contains(question_low, "continent")||StringAlgo.contains(question_low, "continents")))
+			{
+				this.qvector[CONTINENT_1] = 1;
+				this.sems[CONTINENT_1] = "?";
+
+				for(String name: continent_keywords)
+				{
+					if(StringAlgo.contains(question_low,name))
+					{
+						tag = true;
+						this.qvector[CONTINENT_2] = 1;
+						this.sems[CONTINENT_2] = continent_keywords_map.get(name);
+						break;
+					}
+				}
+			}
+			else if(this.sems[CONTINENT_1]!=null && this.sems[CONTINENT_1].indexOf('?')<0)
+			{
+				for(int i= continent_keywords.size()-1;i>=0;i--)
+				{
+					String name = continent_keywords.get(i);
+					if(StringAlgo.contains(question_low,name))
+					{
+						tag = true;
+						this.qvector[CONTINENT_2] = 1;
+						this.sems[CONTINENT_2] = continent_keywords_map.get(name);
+						break;
+					}
+				}
+			}
+		}
 		
 	}
 	private String generateSQL_other()
 	{
-		this.qvector[MOUNTAIN] = 0;
-		this.qvector[SEA]=0;
+		this.qvector[MOUNTAIN_1] = 0;
+		this.qvector[SEA_1]=0;
 		this.qvector[MOUNTAIN_HIGH] = 0;
 		this.qvector[SEA_DEEP] = 0;
-		this.sems[MOUNTAIN] = null;
-		this.sems[SEA]=null;
+		this.sems[MOUNTAIN_1] = null;
+		this.sems[SEA_1]=null;
 		this.sems[MOUNTAIN_HIGH] = null;
 		this.sems[SEA_DEEP] = null;
 		
@@ -421,6 +635,59 @@ public class GeoVectorBuilder extends VectorBuilder
 					conditions.add(i);
 			}	
 		}
+		
+		if(this.sems[HIGHER]!=null)
+		{
+			if(question_mark.size()==0)
+			{
+				sql += "count(*) from "+table+" where continent like '" + this.sems[CONTINENT_1]+"' and highest > (select highest from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )" ;
+				
+			}
+			else
+			{
+				sql += "distinct continent from "+table+" where highest > (select highest from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )";
+			}
+			return sql;
+		}
+		if(this.sems[LOWER]!=null)
+		{
+			if(question_mark.size()==0)
+			{
+				sql += "count(*) from "+table+" where continent like '" + this.sems[CONTINENT_1]+"' and highest < (select highest from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )" ;
+				
+			}
+			else
+			{
+				sql += "distinct continent from "+table+" where highest < (select highest from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )";
+			}
+			return sql;
+		}
+		if(this.sems[POPULATION_LARGER]!=null)
+		{
+			if(question_mark.size()==0)
+			{
+				sql += "count(*) from "+table+" where continent like '" + this.sems[CONTINENT_1]+"' and population < (select population from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )" ;
+				
+			}
+			else
+			{
+				sql += "distinct continent from "+table+" where population < (select population from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )";
+			}
+			return sql;
+		}
+		if(this.sems[AREA_LARGER]!=null)
+		{
+			if(question_mark.size()==0)
+			{
+				sql += "count(*) from "+table+" where continent like '" + this.sems[CONTINENT_1]+"' and area_km2 < (select area_km2 from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )" ;
+				
+			}
+			else
+			{
+				sql += "distinct continent from "+table+" where area_km2 < (select area_km2 from "+table+" where continent like '"+this.sems[CONTINENT_2]+"' )";
+			}
+			return sql;
+		}
 		if(question_mark.size()==0)
 		{
 			sql += "count(*) ";
@@ -432,13 +699,13 @@ public class GeoVectorBuilder extends VectorBuilder
 			{
 				switch (question_mark.get(i))
 				{
-				case CITY:
+				case CITY_1:
 					sql += "city_name ";
 					break;
-				case COUNTRY:
+				case COUNTRY_1:
 					sql += "country_name ";
 					break;
-				case CONTINENT:
+				case CONTINENT_1:
 					sql += "continent ";
 					break;
 				case CONTINENT_AREA:
@@ -472,14 +739,14 @@ public class GeoVectorBuilder extends VectorBuilder
 		{
 			switch (conditions.get(i))
 			{
-			case CITY:
-				sql += "city_name like '"+ this.sems[CITY]+"' ";
+			case CITY_1:
+				sql += "city_name like '"+ this.sems[CITY_1]+"' ";
 				break;
-			case COUNTRY:
-				sql += "country_name like '"+ this.sems[COUNTRY]+"' ";
+			case COUNTRY_1:
+				sql += "country_name like '"+ this.sems[COUNTRY_1]+"' ";
 				break;
-			case CONTINENT:
-				sql += "continent like '"+ this.sems[CONTINENT]+"' ";
+			case CONTINENT_1:
+				sql += "continent like '"+ this.sems[CONTINENT_1]+"' ";
 				break;
 			case CONTINENT_LOWEST:
 				sql += "lowest = (select max(lowest) from ( "+table+" )) ";
@@ -520,6 +787,20 @@ public class GeoVectorBuilder extends VectorBuilder
 					conditions.add(i);
 			}	
 		}
+		
+		if(this.sems[DEEPER]!=null)
+		{
+			if(question_mark.size()==0)
+			{
+				sql += "count(*) from seas where ocean like '" + this.sems[SEA_1]+"' and deepest > (select deepest from seas where ocean like '"+this.sems[SEA_2]+"' )" ;
+			}
+			else
+			{
+				sql += "distinct ocean from seas where deepest > (select deepest from seas where ocean like '"+this.sems[SEA_2]+"' )";
+			}
+			return sql;
+		}
+		
 		if(question_mark.size()==0)
 		{
 			sql += "count(*) ";
@@ -531,7 +812,7 @@ public class GeoVectorBuilder extends VectorBuilder
 			{
 				switch (question_mark.get(i))
 				{
-				case SEA:
+				case SEA_1:
 					sql += "seas.ocean ";
 					break;
 				case SEA_DEEP:
@@ -551,8 +832,8 @@ public class GeoVectorBuilder extends VectorBuilder
 		{
 			switch (conditions.get(i))
 			{
-			case SEA:
-				sql += "seas.ocean like '"+ this.sems[SEA]+"' ";
+			case SEA_1:
+				sql += "seas.ocean like '"+ this.sems[SEA_1]+"' ";
 				break;
 			case SEA_DEEP:
 				sql += "seas.deepest like '"+ this.sems[SEA_DEEP]+"' ";
@@ -584,6 +865,25 @@ public class GeoVectorBuilder extends VectorBuilder
 					conditions.add(i);
 			}	
 		}
+		
+		if(this.sems[HIGHER]!=null || this.sems[LOWER]!=null)
+		{
+			String op;
+			if(this.sems[HIGHER]!=null)
+				op = ">";
+			else
+				op = "<";
+			if(question_mark.size()==0)
+			{
+				sql += "count(*) from mountains where name like '" + this.sems[MOUNTAIN_1]+"' and height "+op+" (select height from mountains where name like '"+this.sems[MOUNTAIN_2]+"' )" ;
+			}
+			else
+			{
+				sql += "distinct name from mountains where height "+op+" (select height from mountains where name like '"+this.sems[MOUNTAIN_2]+"' )";
+			}
+			return sql;
+		}
+		
 		if(question_mark.size()==0)
 		{
 			sql += "count(*) ";
@@ -595,7 +895,7 @@ public class GeoVectorBuilder extends VectorBuilder
 			{
 				switch (question_mark.get(i))
 				{
-				case MOUNTAIN:
+				case MOUNTAIN_1:
 					sql += "mountains.name ";
 					break;
 				case MOUNTAIN_HIGH:
@@ -615,8 +915,8 @@ public class GeoVectorBuilder extends VectorBuilder
 		{
 			switch (conditions.get(i))
 			{
-			case MOUNTAIN:
-				sql += "mountains.name like '"+ this.sems[MOUNTAIN]+"' ";
+			case MOUNTAIN_1:
+				sql += "mountains.name like '"+ this.sems[MOUNTAIN_1]+"' ";
 				break;
 			case MOUNTAIN_HIGH:
 				sql += "cr.name like '"+ this.sems[MOUNTAIN_HIGH]+"' ";
@@ -635,13 +935,13 @@ public class GeoVectorBuilder extends VectorBuilder
 	@Override
 	public String generateSQL()
 	{
-		if(this.sems[CONTINENT]!=null)
+		if(this.sems[CONTINENT_1]!=null)
 		{
 			return generateSQL_other();
 		}
-		if(this.sems[MOUNTAIN]!=null)
+		if(this.sems[MOUNTAIN_1]!=null)
 			return generateSQL_Mountain();
-		if(this.sems[SEA] != null)
+		if(this.sems[SEA_1] != null)
 			return generateSQL_Sea();
 		else return generateSQL_other();
 //		return "TEST";
