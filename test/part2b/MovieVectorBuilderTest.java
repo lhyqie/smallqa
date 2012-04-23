@@ -3,75 +3,87 @@ package part2b;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import common.Config;
+import common.StringAlgo;
 import part2.SQLiteRunner;
 public class MovieVectorBuilderTest {
+	
+	String questions[]= {
+//			 "Who won the most academy awards in oscar?",
+//			 "Who are the actors of Avatar?",
+//			 "Who are the actresses of Avatar?",
+//			 "Who are the actors and actresses in Titanic?",
+//			 "What types of awards does oscar have?"
+//			 "Does Men in Black have Will Smith?", 			
+//			 "Is Will Smith in the movie Hitch?"
+//			 "How many movies was Michael J. Fox in?",
+//			 "How many movies did Ron Howard star in?",
+//			 "Who acted in Bonnie and Clyde?",
+//			 "Which is the scary movie by Kubrik with Nicholson?",
+//			 "Did a French actor win the oscar in 2012?",
+//			 "Which actress won the oscar in 2012?",
+//			 "Is The King's Speech in 2010?",
+//        -------------------------------------------------------------
+
+//--------------------solved ---------------------
+//			 "Which movie wins the Best picture in 2011?",
+//			 "Which movie won the best picture in 2009?",
+//			 "What is the genre of The Hangover?",
+//			 "What is the earnings rank of New Moon?",
+//		     "What's the runtime of Spider-Man 2?",
+//			 "What is the rating of The Shore?",
+//			 "What is the rating of Shrek?",
+//			 "What's the genre, rating and runtime for Star Wars 3?",
+//			 "When was Avatar released?",
+//			 "Was Jurassic Park shown in 1993?",
+//			 "Was Jurassic Park released in 1993?",
+//			 "In which year was Titanic showed?",
+//			 "Did Swank win the oscar in 2000?",
+//			 "Who directed the best movie in 2010?",
+//			 "Who wins the best director in 2010?",
+//			 "Who was the best actor in 1940?",
+//			 "Who won the best actor in 2010?",
+//			 "Who won the best supporting actress in 2010?",
+//			 "Who won the best actor of oscar in 2011?",
+//			 "When did Will Smith won the best actor?",
+//			 "Which actress won the oscar in 2012?",
+//			 "Who won the oscar for the best actor in 2005?",
+//			 "Where was John Wayne born?",
+//			 "Where was Gary Cooper born?",
+//			 "When was John Belushi born?",
+//			 "When was Bette Davis born?",
+//			 "What is the birth date of James Dean?",
+//			 "What is the date of birth of James Dean?",
+//			 "What is the birthday of James Dean?", 
+//			 "What is the place of birth of Gary Cooper?",
+//			 "What is the birth place of Gary Cooper?",	 
+//			 "Did Cameron direct Titanic?",
+//			 "Does Cameron direct in Titanic?",
+//			 "Who directed Hugo II?",
+//			 "Who is the director of Avatar?",
+//			 "Who directs Avatar?",
+//			 "Who is the director of Avatar?",
+//			 "Did Dicaprio star Titanic?",
+//			 "Did Dicaprio act Titanic?",
+//			 "Did Neeson star in Schindler's List?",
+//			 "Which actor acted in Rocky?",
+//			 "In which movie did Jeff Bridges won the best actor in 2010?",
+//			 "In which movie did Dicaprio get the Best supporting actress in 2010?",
+//			 "In which movie did Kathryn Bigelow won the best director in 2010?",
+//			 "Did Cameron win the best director?",
+//			 "Did Dicaprio win the best actor?",
+//			 "Did Smith win the oscar?",
+//			 "Is Joan Fontaine older than Tyrone Power?",
+//			 "Is Joan Fontaine younger than Tyrone Power?",
+			 "Does Platoon have more runtime than Monster?",
+			 "Does Platoon have less runtime than Monster?",
+			 "Is the earnings rank of  Platoon higher than Monster?",
+			 "Is the earnings rank of  Platoon lower than Monster?",
+	};
+	
 	//@Test
 	public void testGenerateQuestionVector() {
 		MovieVectorBuilder builder = new MovieVectorBuilder();
-		String questions[]= {	 
-//								 "Who won the most academy awards in oscar?",
-//				 				 "Who are the actors of Avatar?",
-//				 				 "Who are the actresses of Avatar?",
-//				 				 "Who are the actors and actresses in Titanic?",
-//								 "What types of awards does oscar have?"
-//								 "Does Men in Black have Will Smith?", 			
-//								 "Is Will Smith in the movie Hitch?"
-//								 "How many movies was Michael J. Fox in?",
-//								 "How many movies did Ron Howard star in?",
-//								 "Who acted in Bonnie and Clyde?",
-//								 "Which is the scary movie by Kubrik with Nicholson?",
-//								 "Did a French actor win the oscar in 2012?",
-//             	             -------------------------------------------------------------
-								 "Did Cameron direct Titanic?",
-								 "Did Dicaprio star Titanic?",
-								 "Did Dicaprio act Titanic?",
-								 "Do Cameron direct in Titanic?",
-								 "Did Neeson star in Schindler's List?",
-								 "Did Swank win the oscar in 2000?",
-								 "Did a French actor win the oscar in 2012?",
-								 "Who directed Hugo II?",
-								 "Who won the oscar for best actor in 2005?",
-								 "Who directed the best movie in 2010?",
-								 "Is the Shining by Kubrik?",
-								 "Who won the oscar for the best actor in 2005?",
-								 "Which actress won the oscar in 2012?",
-								 "Who directed the best movie in 2010?",
-								 "Who is the director of Avatar?",
-								 "In which year was Titanic showed?",
-							     "What's the runtime of Spider-Man 2?",
-								 "Was Jurassic Park shown in 1993?",
-								 "Was Jurassic Park released in 1993?",
-								 "What is the earnings rank of New Moon?",
-								 "What is the rating of Shrek?",
-								 "What is the genre of The Hangover?",
-								 "Which actor acted in Rocky?",
-								 "What is the rating of The Shore?",
-								 "Is The King's Speech 2010?",
-								 "When was John Belushi born?",
-								 "Where was John Wayne born?",
-								 "Which movie wins the Best picture in 2011?",
-								 "Who won the best actor of oscar in 2011?",
-								 "Who wins the best director in 2010?",
-								 "In which movie did Dicaprio get the Best supporting actress in 2010?",
-								 "Who was the best actor in 1940?",
-								 "When did Will Smith won the best actor?",
-								 "When was Bette Davis born?",
-								 "What is the birth date of James Dean?",
-								 "What is the date of birth of James Dean?",
-								 "What is the birthday of James Dean?",
-								 "Where was Gary Cooper born?",
-								 "What is the place of birth of Gary Cooper?",
-								 "What is the birth place of Gary Cooper?",
-								 "When was Avatar released?",
-								 "What's the genre, rating and runtime for Star Wars?",
-								 "Who directs Avatar?",
-								 "Who is the director of Avatar?",
-								 "Who won the best actor in 2010?",
-								 "Who won the best supporting actress in 2010?",
-								 "Which movie won the best picture in 2009?",
-								 "In which movie did Jeff Bridges won the best actor in 2010?",
-							};
-		
+			
 		for (String question : questions) {
 			System.out.print(question+",");
 			builder.generateQuestionVector(question);
@@ -112,72 +124,7 @@ public class MovieVectorBuilderTest {
 	@Test
 	public void testGenerateSQL() {
 		MovieVectorBuilder builder = new MovieVectorBuilder();
-		String questions[]= {
-//				 "Who won the most academy awards in oscar?",
-//				 "Who are the actors of Avatar?",
-//				 "Who are the actresses of Avatar?",
-//				 "Who are the actors and actresses in Titanic?",
-//				 "What types of awards does oscar have?"
-//				 "Does Men in Black have Will Smith?", 			
-//				 "Is Will Smith in the movie Hitch?"
-//				 "How many movies was Michael J. Fox in?",
-//				 "How many movies did Ron Howard star in?",
-//				 "Who acted in Bonnie and Clyde?",
-//				 "Which is the scary movie by Kubrik with Nicholson?",
-//				 "Did a French actor win the oscar in 2012?",
-//				 "Which actress won the oscar in 2012?",
-//				 "Is The King's Speech in 2010?",
-//             -------------------------------------------------------------
-
-// --------------------solved ---------------------
-				 "Which movie wins the Best picture in 2011?",
-				 "Which movie won the best picture in 2009?",
-				 "What is the genre of The Hangover?",
-				 "What is the earnings rank of New Moon?",
-			     "What's the runtime of Spider-Man 2?",
-				 "What is the rating of The Shore?",
-				 "What is the rating of Shrek?",
-				 "What's the genre, rating and runtime for Star Wars 3?",
-				 "When was Avatar released?",
-				 "Was Jurassic Park shown in 1993?",
-				 "Was Jurassic Park released in 1993?",
-				 "In which year was Titanic showed?",
-				 "Did Swank win the oscar in 2000?",
-				 "Who directed the best movie in 2010?",
-				 "Who wins the best director in 2010?",
-				 "Who was the best actor in 1940?",
-				 "Who won the best actor in 2010?",
-				 "Who won the best supporting actress in 2010?",
-				 "Who won the best actor of oscar in 2011?",
-				 "When did Will Smith won the best actor?",
-				 "Which actress won the oscar in 2012?",
-				 "Who won the oscar for the best actor in 2005?",
-				 "Where was John Wayne born?",
-				 "Where was Gary Cooper born?",
-				 "When was John Belushi born?",
-				 "When was Bette Davis born?",
-				 "What is the birth date of James Dean?",
-				 "What is the date of birth of James Dean?",
-				 "What is the birthday of James Dean?", 
-				 "What is the place of birth of Gary Cooper?",
-				 "What is the birth place of Gary Cooper?",	 
-				 "Did Cameron direct Titanic?",
-				 "Does Cameron direct in Titanic?",
-				 "Who directed Hugo II?",
-				 "Who is the director of Avatar?",
-				 "Who directs Avatar?",
-				 "Who is the director of Avatar?",
-				 "Did Dicaprio star Titanic?",
-				 "Did Dicaprio act Titanic?",
-				 "Did Neeson star in Schindler's List?",
-				 "Which actor acted in Rocky?",
-				 "In which movie did Jeff Bridges won the best actor in 2010?",
-				 "In which movie did Dicaprio get the Best supporting actress in 2010?",
-				 "In which movie did Kathryn Bigelow won the best director in 2010?",
-				 "Did Cameron win the best director?",
-				 "Did Dicaprio win the best actor?",
-				 "Did Smith win the oscar?",
-		};
+		
 		for (String question : questions) {
 			System.out.println(question);
 			builder.generateQuestionVector(question);
@@ -202,5 +149,12 @@ public class MovieVectorBuilderTest {
 			System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 		}
 	}
-
+    //@Test
+	public void testQuestionType(){
+		MovieVectorBuilder mBuilder = new MovieVectorBuilder();
+		for (String question : questions) {
+			System.out.println(question);
+			System.out.println(mBuilder.questionType(question));
+		}
+	}
 }
