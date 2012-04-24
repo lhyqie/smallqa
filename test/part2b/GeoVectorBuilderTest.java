@@ -22,15 +22,22 @@ public class GeoVectorBuilderTest {
 	public void testSetSemantic() {
 	   //String question = "Did Cameron direct Titanic?";
 	   //String question = "Did Dicaprio star Titanic?";
-		String[] questions = {"Is France in Europe?",
+		String[] questions = {
+				"Is France in Europe?",
 				"Is Rome the capital of Italy?",
 				"What is the capital of Bahrain?",
 				"Which is the highest mountain in the world?",
 				"In which continent does Canada lie?",
 				"What is the capital of Bahrain?",
+				"what mountain is higher than lhotse?",
+				"is K2 higher than lhotse? ",
 //				"With which countries does Italy have a border?",
 				"Which is the highest mountain in the world?",
-//				"Is the Pacific deeper than than the Atlantic?",
+				"which continent is larger than Africa?",
+				"Is Asia higher than Africa?",
+				"Does Africa have larger population than Asia?",
+				"Is the Pacific deeper than than the Atlantic?",
+				"What ocean is deeper than than the Atlantic?",
 				"Which city is the capital of Luxembourg?",
 				"Is Paris the capital of France?",
 				"Which country is Cape Town in?",
