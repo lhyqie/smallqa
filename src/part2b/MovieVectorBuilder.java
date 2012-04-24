@@ -235,10 +235,11 @@ public class MovieVectorBuilder extends VectorBuilder {
 		question = question.toLowerCase();
 		if( (StringAlgo.contains(question,"when") && (StringAlgo.contains(question,"born"))) || 
 			((StringAlgo.contains(question,"what") && (StringAlgo.contains(question,"birth")) || StringAlgo.contains(question,"birthday"))) ||
-			(StringAlgo.contains(question,"older")) || 
+			(StringAlgo.contains(question,"older")) ||
+			(StringAlgo.contains(question,"old")) ||
 			(StringAlgo.contains(question,"younger")) ||
-			(StringAlgo.contains(question,"age")) ||
-			(StringAlgo.contains(question, "old"))
+			(StringAlgo.contains(question,"young")) ||
+			(StringAlgo.contains(question,"age")) 
 		  ) {
 			qvector[DOB] = 1;
 			sems[DOB] = "?";
@@ -390,6 +391,13 @@ public class MovieVectorBuilder extends VectorBuilder {
 		if(StringAlgo.contains(question,"older") || StringAlgo.contains(question,"longer") || StringAlgo.contains(question,"higher") || StringAlgo.contains(question,"more")){
 			qvector[CMP] = 1;
 			sems[CMP] = ">";
+		}
+		if(StringAlgo.contains(question,"equal") || StringAlgo.contains(question,"equals") || StringAlgo.contains(question,"same") ||
+				StringAlgo.contains(question,"as old as") || StringAlgo.contains(question,"as young as") ||
+				StringAlgo.contains(question,"as high as") || StringAlgo.contains(question,"as long as")
+		  ){
+			qvector[CMP] = 1;
+			sems[CMP] = "=";
 		}
 	}
 	
