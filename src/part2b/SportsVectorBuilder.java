@@ -152,7 +152,7 @@ public class SportsVectorBuilder extends VectorBuilder
 				break;
 			}
 		}
-		if(!tag && (StringAlgo.contains(question_low, "what events") || StringAlgo.contains(question_low, "what event") || StringAlgo.contains(question_low, "which event") || StringAlgo.contains(question_low, "what competition")||StringAlgo.contains(question_low, "what competitions")||StringAlgo.contains(question_low, "which competition")||StringAlgo.contains(question_low, "what sports")||StringAlgo.contains(question_low, "what sport")))
+		if(!tag && (StringAlgo.contains(question_low, "what events") || StringAlgo.contains(question_low, "what event") || StringAlgo.contains(question_low, "which event") || StringAlgo.contains(question_low, "what competition")||StringAlgo.contains(question_low, "what competitions")||StringAlgo.contains(question_low, "which competition")||StringAlgo.contains(question_low, "what sports")||StringAlgo.contains(question_low, "what sport")||StringAlgo.contains(question_low, "what game")||StringAlgo.contains(question_low, "which game")))
 		{
 			this.qvector[COMPETITION_NAME] = 1;
 			this.sems[COMPETITION_NAME] = "?";
