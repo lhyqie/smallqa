@@ -23,7 +23,6 @@ public class SportsVectorBuilderTest {
 	   //String question = "Did Cameron direct Titanic?";
 	   //String question = "Did Dicaprio star Titanic?";
 		String[] questions = {
-				"what event does ?",
 				"Who won women figure skating in 2010?",
 				"Did a Korean woman win the gold medal in figure skating?",
 				"Did Razzoli win the men slalom in 2010?",
@@ -35,7 +34,6 @@ public class SportsVectorBuilderTest {
 				"In which sport did Canada win two gold medals?",
 				"Is shorttrack in the winter Olympics?",
 				"Who got the gold medal for biathlon in 2010?",
-//				"Which country won the most medals in 2010?",
 				"In which game did razzoli win a gold medal in 2010?",
 				"Who won the second place in slalom in 2010?",
 				"In which game did kostelic win a silver medal in 2006?",
