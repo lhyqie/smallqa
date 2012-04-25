@@ -71,7 +71,11 @@ public class GetKeywords
 	}
 	public static void main(String[] args)
 	{
-		GetKeywords g= new GetKeywords();
-		g.get_keywords();
+//		GetKeywords g= new GetKeywords();
+//		g.get_keywords();
+		TreeSet<String> ts = new TreeSet<String>();
+		ts.add("hello");
+		ts.add("world");
+		System.out.println(ts);
 	}
 }
