@@ -62,5 +62,9 @@ public class MiniWatson implements IWatson {
 		}
 		return null;
 	}
-
+   
+	public static void main(String[] args) {
+		MiniWatsonTest testcase = new MiniWatsonTest();
+		testcase.testAnswerQuestion();
+	}
 }
