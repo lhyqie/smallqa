@@ -30,17 +30,17 @@ public class MiniWatson implements IWatson {
 			}else if(label.equals("S")){
 				sBuilder.generateQuestionVector(question);
 				String sql = sBuilder.generateSQL();
-				results = SQLiteRunner.getSQLResult(Config.getMovieDB(), sql);
+				results = SQLiteRunner.getSQLResult(Config.getSportsDB(), sql);
 			}else if(label.equals("G")){
 				gBuilder.generateQuestionVector(question);
 				String sql = gBuilder.generateSQL();
-				results = SQLiteRunner.getSQLResult(Config.getMovieDB(), sql);
+				results = SQLiteRunner.getSQLResult(Config.getGeographyDB(), sql);
 			}
 			if(VectorBuilder.questionType(question).equals("YES-NO")){
 				if(StringAlgo.isNumber(results)){
 					Integer res = Integer.parseInt(results);
 					if(res == 0) results= "false";
-					else results = "true";
+					else if(res > 0)results = "true";
 				}
 			}
 		}catch(Exception e){

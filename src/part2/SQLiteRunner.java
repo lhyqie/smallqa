@@ -13,6 +13,7 @@ import common.Config;
 public class SQLiteRunner {
 	SQLiteRunner(){}
 	public static ArrayList<String> getMovieNameList(){
+	      
 		  ArrayList<String> movieNameList = new ArrayList<String>();
 		  Connection connection = null;  
 		  Statement statement = null; 
@@ -97,6 +98,7 @@ public class SQLiteRunner {
 	}
 	public static String getSQLResult(String dbName, String sql){
 		  String ret = "";
+		  
 		  Connection connection = null;  
 	      ResultSet resultSet  = null;  
 	      Statement statement = null;  
@@ -114,8 +116,10 @@ public class SQLiteRunner {
 	        	  for (int i = 1; i <= numberOfColumns; i++) {
 	        		   int type = rsMetaData.getColumnType(i); 
 					   switch(type){
-					   		case java.sql.Types.INTEGER: ret += resultSet.getInt(i)+"\t"; break;
+					   		case java.sql.Types.INTEGER: ret += "" + (resultSet.getLong(i))+"\t"; break;
 					   		case java.sql.Types.VARCHAR: ret += resultSet.getString(i)+"\t"; break;
+					   		case java.sql.Types.CHAR: ret += resultSet.getString(i)+"\t"; break;
+					   		case java.sql.Types.DATE: ret += resultSet.getDate(i).toString()+"\t"; break;
 					   }
 				  }
 	        	  ret+="\n";
