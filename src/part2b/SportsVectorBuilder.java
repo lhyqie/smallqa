@@ -46,7 +46,7 @@ public class SportsVectorBuilder extends VectorBuilder
 	ArrayList<String> medal_keywords = new ArrayList<String>();
 	ArrayList<String> win_keywords = new ArrayList<String>(Arrays.asList(win));
 	
-	String table = "athletes outer left left join (SELECT * FROM competitions natural join results) as cr on athletes.name = cr.winner ";
+	String table = "athletes outer left join (SELECT * FROM competitions natural join results) as cr on athletes.name = cr.winner ";
 	TreeMap<String,String> gender_keywords_map;
 	TreeMap<String,String> competition_name_keywords_map;
 	TreeMap<String,String> competition_type_keywords_map;
@@ -152,7 +152,7 @@ public class SportsVectorBuilder extends VectorBuilder
 				break;
 			}
 		}
-		if(!tag && (question_low.startsWith("what events") ||question_low.startsWith("what event") || question_low.startsWith("which event")))
+		if(!tag && (StringAlgo.contains(question_low, "what events") || StringAlgo.contains(question_low, "what event") || StringAlgo.contains(question_low, "which event") || StringAlgo.contains(question_low, "what competition")||StringAlgo.contains(question_low, "what competitions")||StringAlgo.contains(question_low, "which competition")||StringAlgo.contains(question_low, "what sports")||StringAlgo.contains(question_low, "what sport")))
 		{
 			this.qvector[COMPETITION_NAME] = 1;
 			this.sems[COMPETITION_NAME] = "?";
@@ -231,12 +231,12 @@ public class SportsVectorBuilder extends VectorBuilder
 		}
 		
 		//YEAR
-		if(StringAlgo.contains(question_low, "in 2010"))
+		if(StringAlgo.contains(question_low, "in 2010") || (StringAlgo.contains(question_low, "in")&&StringAlgo.contains(question_low, "2010")))
 		{
 			this.qvector[MEDAL_YEAR] = 1;
 			this.sems[MEDAL_YEAR] = "2010";
 		}
-		else if(StringAlgo.contains(question_low, "in 2006"))
+		else if(StringAlgo.contains(question_low, "in 2006")|| (StringAlgo.contains(question_low, "in")&&StringAlgo.contains(question_low, "2006")))
 		{
 			this.qvector[MEDAL_YEAR] = 1;
 			this.sems[MEDAL_YEAR] = "2006";
