@@ -29,7 +29,43 @@ public class GeoVectorBuilderTest {
 //				"Which country has more than one capital?",
 //				"With which countries does Canada have a border?",
 //--------------------------- belows are solved ------------------------------------
-
+<<<<<<< HEAD
+				"Is France in Europe?",
+				"Is Rome the capital of Italy?",
+				"What is the capital of Bahrain?",
+				"Which is the highest mountain in the world?",
+				"In which continent does Canada lie?",
+				"What is the capital of Bahrain?",
+				"what mountain is higher than lhotse?",
+				"is K2 higher than lhotse? ",
+				"Which is the highest mountain in the world?",
+				"which continent is larger than Africa?",
+				"Is Asia higher than Africa?",
+				"Does Africa have larger population than Asia?",
+				"Is the Pacific deeper than than the Atlantic?",
+				"What ocean is deeper than than the Atlantic?",
+				"Which city is the capital of Luxembourg?",
+				"Is Paris the capital of France?",
+				"Which country is Cape Town in?",
+				"Which countinent is Benin in?",
+				"Is South Africa in Australia?",
+				"What is the area of Asia?",
+				"Which continent is the highest?",
+				"What is the population of Europe?",
+				"Which ocean is the deepest?",
+				"What is the height of Mount Everest?",
+				"Is Makalu the highest mountain?",
+				"Which continent is France in?",
+				"What's the area of Africa?",
+				"What's the population of Asia?",
+				"Which continent has the highest sea level?",
+				"Which continent has the lowest altitude?",
+				"What's the capital of Italy?",
+				"Which mountain is the highest?",
+				"What's the height of Mount Everest?",
+				"Which ocean is the deepest?",
+				"What is the most depth of Arctic Ocean?"
+=======
 //				"Is France in Europe?",
 //				"Is Rome the capital of Italy?",
 //				"What is the capital of Bahrain?",
@@ -67,6 +103,7 @@ public class GeoVectorBuilderTest {
 //				"What's the height of Mount Everest?",
 //				"Which ocean is the deepest?",
 //				"What is the most depth of Arctic Ocean?"
+>>>>>>> modified based on the score script
 				};
 //		String question = "Who won women figure skating in 2010?";
 //		String question = "Did a Korean woman win the gold medal in figure skating?";
