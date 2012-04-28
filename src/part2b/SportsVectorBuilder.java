@@ -231,12 +231,12 @@ public class SportsVectorBuilder extends VectorBuilder
 		}
 		
 		//YEAR
-		if(StringAlgo.contains(question_low, "in 2010") || (StringAlgo.contains(question_low, "in")&&StringAlgo.contains(question_low, "2010")))
+		if(StringAlgo.contains(question_low, "in 2010") || (StringAlgo.contains(question_low, "in")&&StringAlgo.contains(question_low, "2010"))|| StringAlgo.contains(question_low, "vancouver"))
 		{
 			this.qvector[MEDAL_YEAR] = 1;
 			this.sems[MEDAL_YEAR] = "2010";
 		}
-		else if(StringAlgo.contains(question_low, "in 2006")|| (StringAlgo.contains(question_low, "in")&&StringAlgo.contains(question_low, "2006")))
+		else if(StringAlgo.contains(question_low, "in 2006")|| (StringAlgo.contains(question_low, "in")&&StringAlgo.contains(question_low, "2006")) || StringAlgo.contains(question_low, "turin"))
 		{
 			this.qvector[MEDAL_YEAR] = 1;
 			this.sems[MEDAL_YEAR] = "2006";

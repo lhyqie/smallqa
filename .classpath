@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/weka.jar"/>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/miniwatson-interface-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/miniwatson-scorener-0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

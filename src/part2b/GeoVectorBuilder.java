@@ -348,7 +348,7 @@ public class GeoVectorBuilder extends VectorBuilder
 			}
 		}
 //		final int CAPITAL = 11;
-		if(StringAlgo.contains(question_low, "capital"))
+		if(StringAlgo.contains(question_low, "capital") || StringAlgo.contains(question_low, "capitals"))
 		{
 			this.qvector[CAPITAL] = 1;
 			this.sems[CAPITAL] = "#";

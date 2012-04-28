@@ -1,12 +1,24 @@
 individual	individual
 nh	nh
 1000	1000
+1000m	1000
+1000 meters	1000
+1000-m	1000
+1000-meter	1000
 one thousand	1000
 one-thousand	1000
 500	500
+500m	500
+500 meters	500
+500-m	500
+500-meter	500
 five hundreds	500
 five-hundred	500
 1500	1500
+1500m	1500
+1500 meters	1500
+1500-m	1500
+1500-meter	1500
 one thousand and five hundreds	1500
 fifteen hundreds	1500
 fifteen-hundred	1500

@@ -3,5 +3,6 @@ arctic	arctic ocean
 atlantic ocean	atlantic ocean
 atlantic	atlantic ocean
 indian ocean	indian ocean
+indian	indian
 pacific ocean	pacific ocean
 pacific	pacific ocean
